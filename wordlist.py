@@ -8,7 +8,7 @@ with open('solutions.csv') as csvfile:
 	for row in reader:
 		#print(row['Rivi'], row['Sisus'])
 		table.append([row['Rivi'], row['Sisus'], row['Detaljit']])
-		str=row['Sisus']+row['Detaljit']
+		str=row['Sisus']+' '+row['Detaljit']
 		prt=str.split()
 		for s in prt:
 			if s not in d:
