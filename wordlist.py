@@ -14,9 +14,6 @@ with open('solutions.csv') as csvfile:
 			if s not in d:
 				d.append([s])
 
-#print(table)
-#print(d)
-
 f=open( "dic_overall.txt","w")
 for s in d:
 	p=s
@@ -25,3 +22,21 @@ for s in d:
 
 f.close()
 
+# Code for getting data from 'howtakescare' column of the users.csv file:
+input_file = csv.DictReader(open('users.csv'))
+table=[]
+d=[]
+for row in input_file:
+        str=row['howtakescare']
+        prt=str.split()
+        for s in prt:
+                if s not in d:
+                        d.append([s])
+                        
+f=open( "dic_users.txt","w")
+for s in d:
+        p=s
+        p.append('\n')
+        f.write(''.join(p))
+
+f.close()
