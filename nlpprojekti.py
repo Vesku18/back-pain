@@ -1,4 +1,4 @@
-import nltk
+﻿#import nltk
 import csv
 import string
 
