@@ -2,6 +2,18 @@
 import csv
 import string
 
+def a_in_b(a,b):
+	if a is None:
+		return False
+	if b is None:
+		return False
+	if len(b) < len(a):
+		return False
+	for i in range(0,len(a)):
+		if a[i] != b[i]:
+			return False
+	return True
+
 ##################################
 # Read Stopwords in
 ##################################
@@ -23,7 +35,7 @@ vocabulary=[] # THIS will contain all the words along the journey
 string_count=[] # this will have frequence
 
 solutions=[]
-with open('solutions.csv') as csvfile:
+with open('solutions_perusmuoto.csv') as csvfile:
 	reader = csv.DictReader(csvfile, ['Rivi','User', 'Otsikko', 'Sisus'])
 	admin_id=1;
 	for row in reader:
@@ -78,7 +90,7 @@ therapy_sh=[]
 lifestyle=[]
 lifestyle_sh=[]
 
-with open('technical_vocabulary_v5.csv') as csvfile:
+with open('technical_vocabulary_v6.csv') as csvfile:
 	reader = csv.DictReader(csvfile, ['disease','disease_sh', 'symptom', 'symptom_sh', 'therapy', 'therapy_sh', 'lifestyle', 'lifestyle_sh', 'nro'])
 	admin_id=1;
 	for row in reader:
@@ -192,7 +204,7 @@ for s in solutions:
 		on_sis = 0;
 		for p in prt:
 			for r in text_list:
-				if p in r:
+				if a_in_b(p,r):
 					on_sis=on_sis+1
 					plus.append(p + ' löytyi sanasta ' + r)
 		if on_sis >= len(prt): # Check if all words of sentiment words in row exist in solutions details
@@ -206,7 +218,7 @@ for s in solutions:
 		on_sis=0
 		for p in prt:
 			for r in text_list:
-				if p in r:
+				if a_in_b(p,r):
 					on_sis=on_sis +1
 					neg.append(p + ' löytyi sanasta ' + r)
 		if on_sis >= len(prt):
