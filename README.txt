@@ -16,7 +16,9 @@ git config --global user.email "...sun osote..."
 4. Muuta tiedostoa mitä tarvii ja talleta tiedosto
 
 5. Päivitä muutokset oman koneen repoon
-git commit ..filename... "....listiedot...."
+git commit ..filename... -m "....lisätiedot...."
+tai
+git commit -a -, "....listätiedot...."
 
 6. Päivitä verkkoon
 git push
