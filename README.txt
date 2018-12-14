@@ -9,7 +9,7 @@ jotain
 
 git clone ...polku....
 
-3. Aseta email asetuksiin
+3. Aseta email asetuksiin omalle koneelle
 
 git config --global user.email "...sun osote..."
 
@@ -26,7 +26,12 @@ git add ...filename....
 7. Päivitä muutokset oman koneen repoon
 git commit ..filename... -m "....lisätiedot...."
 tai
-git commit -a -, "....listätiedot...."
+git commit -a -m "....listätiedot...."
 
+<<<<<<< HEAD
 8. Päivitä verkkoon
 git push
+=======
+6. Päivitä verkkoon
+git push
+>>>>>>> a5781710fb0c913bae62caf212c6129c7423d9e9
