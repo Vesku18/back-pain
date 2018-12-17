@@ -71,8 +71,37 @@ with open('solutions_perusmuoto.csv') as csvfile:
 					ind = vocabulary.index(s)
 					string_count[ind] = int(string_count[ind]) + 1
 
-print(solutions[1])
+#print(solutions[1])
 print('Solutions file read in')
+
+
+########################################
+# Read users document
+
+users=[]
+
+with open('users.csv') as csvfile:
+	reader = csv.DictReader(csvfile, ['User_id','Gender', 'Age', 'Region', 'Jobs','Degree','Howactive','Suffer','Sufferi','Sufffernow','Surge','Howtakescare'])
+	admin_id=1;
+	for row in reader:
+		#print(row['Rivi'], row['Sisus'])
+		users.append([row['User_id'], row['Howtakescare']])
+
+		str1=row['Howtakescare']
+		prt=str1.split()
+		for s in prt:
+			if s not in stopwords:
+				if s not in vocabulary:
+					vocabulary.append(str(s))
+					string_count.append(1)
+				else:
+					ind = vocabulary.index(s)
+					string_count[ind]=int(string_count[ind])+1
+
+
+print(users[1])
+print('Users read')
+
 
 
 ########################################
@@ -196,7 +225,7 @@ for s in solutions:
 	neg_counter=0
 	plus=[]
 	neg=[]
-	print('Dokumentin ' + s[1] + ' vertailu alkaa' + '\n')
+#	print('Dokumentin ' + s[1] + ' vertailu alkaa' + '\n')
 
 	# if all words in positive sentiment definition row are included, then doc gets postiive tic
 	for i in sentiments_pos:
@@ -233,7 +262,7 @@ for s in solutions:
 	f.write('\n')
 
 
-	print('Näistä pos sanoja etitään' )
+'''	print('Näistä pos sanoja etitään' )
 	print(text_list)
 	print('\n')
 	print('Tässä haettavat postiiiviset sanat' + 'n')
@@ -245,7 +274,7 @@ for s in solutions:
 	print(neg)
 
 	print('+n' + 'Tulos: Doc ' + s[1] + ' Positive: ' + str(plus_counter) + ', Negative: ' + str(neg_counter) + '\n')
-
+'''
 
 
 ##########################################
@@ -256,6 +285,36 @@ for s in solutions:
 # Grouped list of same kind of words, and sum o freqquence of the group
 
 # NOT done
+
+
+##########################################
+# Overlapping between user documents and technical vocabulary
+technical_vocabulary_set = set(technical_vocabulary)
+#print(technical_vocabulary_set)
+print('Common words and difference')
+f=open( "intersection_with_reference_for_users_doc.csv","w")
+f.write(' ')
+for s in technical_vocabulary:
+	f.write(','+ s )
+f.write(', SAME, DIFFERENT' + '\n')
+
+user_counter=0
+for s in users:
+	user_counter = user_counter +1
+	text_set = set(s[1].split())
+	diff_set=set(text_set.difference(technical_vocabulary_set))
+
+	leikkaus_set=set(text_set.intersection(technical_vocabulary_set))
+	print('User:' + str(user_counter) + ' Common: ' + str(len(leikkaus_set)) + ', Different: ' + str(len(diff_set)))
+
+	f.write(s[0])
+	for sana in technical_vocabulary:
+		if( sana in list(leikkaus_set)):
+			f.write(',' + '1')
+		else:
+			f.write(','+ '0')
+	f.write(',' + str(len(leikkaus_set)) + ',' + str(len(diff_set)) + '\n')
+
 
 ##########################################
 # Overlapping between user documents and technical vocabulary
@@ -273,7 +332,7 @@ for s in solutions:
 	diff_set=set(text_set.difference(technical_vocabulary_set))
 
 	leikkaus_set=set(text_set.intersection(technical_vocabulary_set))
-	print('Doc:' + s[1] + ' Common: ' + str(len(leikkaus_set)) + ', Different: ' + str(len(diff_set)))
+	#print('Doc:' + s[1] + ' Common: ' + str(len(leikkaus_set)) + ', Different: ' + str(len(diff_set)))
 
 	f.write(s[1])
 	for sana in technical_vocabulary:
@@ -308,7 +367,7 @@ for s in solutions:
 					common_list.append(i)
 	f.write(',' + str(len(common_list)) + '\n')
 
-	print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
+	#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
 
 
 
