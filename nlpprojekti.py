@@ -2,6 +2,7 @@
 import csv
 import string
 
+
 def a_in_b(a,b):
 	if a is None:
 		return False
