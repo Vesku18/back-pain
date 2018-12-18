@@ -282,7 +282,7 @@ for s in solutions:
 				if a_in_b(p,r):
 					on_sis=on_sis +1
 					neg.append(p + ' löytyi sanasta ' + r)
-		if on_sis >= len(prt):
+		if (on_sis >= len(prt)) and (on_sis > 0):
 				neg_counter = neg_counter + 1
 
 	f.write(',' + str(neg_counter))
@@ -330,11 +330,12 @@ for s in users:
 		prt=i.split()
 		on_sis = 0;
 		for p in prt:
+
 			for r in text_list:
 				if a_in_b(p,r):
 					on_sis=on_sis+1
 					plus.append(p + ' löytyi sanasta ' + r)
-		if on_sis >= len(prt): # Check if all words of sentiment words in row exist in solutions details
+		if (on_sis >= len(prt)) and (on_sis > 0): # Check if all words of sentiment words in row exist in solutions details
 			plus_counter = plus_counter + 1 # stemmed wor may exist in several words in user document but only own count
 
 	f.write(',' + str(plus_counter))
@@ -345,10 +346,10 @@ for s in users:
 		on_sis=0
 		for p in prt:
 			for r in text_list:
-				if a_in_b(p,r):
+				if a_in_b(p,r) and r is not None and p is not None:
 					on_sis=on_sis +1
 					neg.append(p + ' löytyi sanasta ' + r)
-		if on_sis >= len(prt):
+		if on_sis >= len(prt) and on_sis != 0:
 				neg_counter = neg_counter + 1
 
 	f.write(',' + str(neg_counter))
