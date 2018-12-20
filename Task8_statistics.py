@@ -315,7 +315,7 @@ def gender_vs_nowpain(reader, csvfile):
         #print(len(mpain))
         #print(len(fpain))
         plt.rcParams["patch.force_edgecolor"] = True
-        fig9, axs = plt.subplots(1, 2, sharey=True)
+        fig9, axs = plt.subplots(1, 2, sharey=True, figsize=(12,8))
         weights = np.ones_like(mpain)/float(len(mpain)) # sum of bar heights => 1
         N, bins, patches = axs[0].hist(x=sorted(mpain), bins=[-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13], facecolor='blue',
                             alpha=1.0, rwidth=0.6, align='left', weights=weights)
