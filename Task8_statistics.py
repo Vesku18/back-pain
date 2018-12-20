@@ -22,7 +22,7 @@ def ages(reader, csvfile):
         weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
         n, bins, patches = plt.hist(x=d, bins=[20,25,30,35,40,45,50,55,60,65,70,75,80],
                                     facecolor='green',alpha=0.9, rwidth=1.0, weights=weights)
-        #plt.grid(axis='x', alpha=0.65, color='black')
+        plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
         plt.xlabel('Age (years)',fontsize=16)
         plt.ylabel('Sum of bar heights = 1',fontsize=14)
         plt.title('Age distribution of the users',fontsize=22)
