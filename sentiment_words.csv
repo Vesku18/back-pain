@@ -1,0 +1,130 @@
+phrase,stemmed,sentiment
+:),:),+
+aktiivinen,aktiivinen,+
+aktiivisuus,aktiivis,+
+apu,apu,+
+auttaa,auttaa,+
+edes,edes,-
+ei auta,ei,-
+eivät osaa,eivät,-
+elpyä,elp,+
+ellen pysty liikkumaan,en,-
+epäileminen,epäilem,-
+hallittu,hallitt,+
+hankala,hanka,-
+harmi,harmi,-
+hellävarainen,hellä,+
+helpottaa,helpott,+
+helvetillinen,helvetilli,-
+hienovarainen,hienov,+
+hoitaa,hoit,+
+huolellinen,huolel,+
+huono,huono,-
+hyvin,hyvin,+
+hyvä,hyvä,+
+voisi hyödyttää,hyödy,+
+hyödytön,hyödytö,-
+paljon hyötyä,hyöt,+
+ihana,ihana,+
+ilo,ilo,+
+irtoaminen,irtoam,-
+iskeä,isk,-
+itku,itk,-
+jouduin,joud,-
+joutua,joutu,-
+jännittynyt,jännitt,-
+jäykkä,jäyk,-
+kattava,kattav,+
+kertakaikkiaan,kertakaikkiaan,-
+ketään,ketään,-
+kielsi,kiel,-
+ylläpidän kiinnostusta,kiinnostus,+
+kiireetön,kiireet,+
+kipeytyminen,kipey,-
+kipeämmäksi,kipeä,-
+kipu ei anna nukkua,kipu,-
+hyvä kipulääkitys,kipulääkit,+
+kireys,kire,-
+kivulias,kivul,-
+kivut oli niin kovat,kivut,-
+kivuton,kivuton,+
+kokenut,koken,+
+korjata,korjat,+
+korjaus,korjau,+
+korkealaatuinen,korkeala,+
+kunnioittaa,kunnio,+
+kuormittava,kuormit,-
+kyetä,kyet,+
+kylläkään,kylläkä,-
+kärsinyt,kärsi,-
+lempeä,lemp,+
+lieventää,lievent,+
+lievitys,lievit,+
+alan olla loppu,loppu,-
+läsnäoleva,läsnä,+
+mahdollistaa,mahdollist,+
+maksimissaan,maksim,-
+mieleinen,mielei,+
+mielekäs,mielek,+
+mieluisa,mielu,+
+mitenkään,mitenkään,-
+motivointi,motiv,+
+mukava,mukav,+
+myönteinen,myönte,+
+nautinto,nautin,+
+nauttiminen,nauttim,+
+oikeanlainen,oikean,+
+oikein,oikein,+
+oireileva,oireil,-
+apu oli olematon,olematon,-
+ongelma,ongelm,-
+opettaa,opett,+
+paha,paha,-
+pahasti,pahasti,-
+pahentaa,pahent,-
+pahimmissa tilanteissa,pahimmi,-
+pakkolepo,pakkole,-
+paljonkaan,paljo,-
+parantua,parant,+
+paras,paras,+
+paremmin,parem,+
+parhaiten,parh,+
+pehmeä,pehm,+
+pelko,pelk,-
+oli pettymys,pettymy,-
+positiivinen,positiivis,+
+pystynyt,pystyn,-
+rampauttava vaikutus,rampauttav,-
+rauhoittaa,rauhoitt,+
+rento,rento,+
+sairas,sairas,-
+sietokyvyn rajalla,sietoky,-
+sivuvaikutuksia,sivuvaikutuks,-
+sokea,sokea,-
+sopiva,sopiv,+
+stressi,stress,-
+stressitön,stressitön,+
+särky,särky,-
+tarkka,tarkka,+
+tehokas,teho,+
+toimia,toimi,+
+toivon,toivo,-
+tukea,tukea,+
+turhaan,turha,-
+stressiä ja turhautumista,turhautumis,-
+tuska,tuska,-
+tärkeä,tärk,+
+tosi tönkkö,tönkkö,-
+vahvempi,vahvempi,+
+vahvistaa,vahvis,+
+vaikea,vaikea,-
+särky vaivaa,vaiva,-
+vakauttaa,vakaut,+
+vakava,vakava,-
+vapaa,vapaa,+
+vapautua,vapaut,+
+varomaton,varom,-
+voima,voima,+
+ymmärtää,ymmärtää,+
+yrittänyt helpottaa,yrittänyt,+
+vaikka kuinka yritän,yritä,+
