@@ -551,7 +551,7 @@ print(sentiment_users[:5])
 technical_vocabulary_set = set(technical_vocabulary)
 print('Common words in reference vs. technical vocabulary in users file')
 
-f=open( "intersection_with_reference_for_users_doc.csv","w")
+f=open( "output_intersection_with_reference_for_users_doc.csv","w")
 f.write(' ')
 for s in technical_vocabulary:
 	f.write(','+ s )
@@ -650,7 +650,7 @@ print('Vocabulary file created')
 # Create removed words list
 ##########################################
 
-f=open("removed_words.txt","w")
+f=open("output_removed_words.txt","w")
 for s in removed_words:
 	f.write(s + ',')
 
