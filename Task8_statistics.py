@@ -2,6 +2,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 import matplotlib.colors
+#matplotlib.style.use('ggplot')
 import pandas as pd
 
 
@@ -17,7 +18,7 @@ def ages(reader, csvfile):
                 if abs(age) < 130:
                     if abs(age) > 5:
                         d.append(abs(age))
-        #print(min(d),max(d))
+
         plt.rcParams["patch.force_edgecolor"] = True
         weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
         n, bins, patches = plt.hist(x=d, bins=[20,25,30,35,40,45,50,55,60,65,70,75,80],
@@ -26,7 +27,7 @@ def ages(reader, csvfile):
         plt.xlabel('Age (years)',fontsize=16)
         plt.ylabel('Sum of bar heights = 1',fontsize=14)
         plt.title('Age distribution of the users',fontsize=22)
-        #plt.text(23, 45, r'$\mu=15, b=3$')
+
         maxfreq = n.max()
         plt.savefig("Age_distribution.png")
 
@@ -124,11 +125,11 @@ def gender(reader, csvfile):
                 gend=float(g)
                 if not gend == -1:
                         d.append(gend)
-        #print(d)
+        
         plt.rcParams["patch.force_edgecolor"] = True
         weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
         n, bins, patches = plt.hist(x=d, bins=[1,2,3], facecolor='blue',
-                            alpha=0.6, rwidth=0.3, align='left', weights=weights)
+                            alpha=0.8, rwidth=0.3, align='left', weights=weights)
         my_xticks = [1,2] #x-axis numbering
         plt.xticks(my_xticks)
         plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
@@ -177,23 +178,34 @@ def corr_matrix(reader, csvfile):
                                                                 d7.append(float(howactive))
                                                                 d8.append(float(surgery))
                                                                 d9.append(float(edudeg))
-        print(len(d1),len(d2),len(d3),len(d4),len(d5),len(d6),len(d7),len(d8),len(d9))
+        
         df = pd.DataFrame({'age': d1})
         df['jobsit.'] = d2
         df['gender'] = d3
         df['pastpain']= d4
-        df['pastsciaticap.'] = d5
+        df['pastsciatica'] = d5
         df['nowpain'] = d6                                          
         df['howactive'] = d7
-        df['surgerydone'] = d8
+        df['surgery'] = d8
         df['education'] = d9
 
-        dfcor = df.corr()
+        # Correlation matrix:
+        dfcor = df.corr(method='pearson')
         dfcor_final = dfcor.round(3) # Taking 3 decimals to results
         dfcor_final.to_csv('corr_matrix.csv', sep=',', encoding='utf-8')
-
         with pd.option_context('display.max_rows', None, 'display.max_columns', None):
                 print(dfcor_final)
+                
+        # Correlation "heatmap":
+        fig20 = plt.figure(20)
+        fig20.set_size_inches(8, 7.5)
+        plt.imshow(df.corr(method='pearson'), cmap=plt.cm.Reds, interpolation='none')
+        plt.colorbar()
+        tick_marks = [i for i in range(len(df.columns))]
+        plt.xticks(tick_marks, df.columns, rotation='vertical')
+        plt.yticks(tick_marks, df.columns)
+        plt.title('Pearson correlations between variables',fontsize=18)
+        plt.savefig('Corr_heatmap.png')
                 
 
 # Current high pain rate and job situation:
@@ -211,7 +223,6 @@ def painjob(reader, csvfile):
                         highpain.append(p)
                         job.append(j)
 
-        #print(job)
         fig6 = plt.figure(6)             
         plt.rcParams["patch.force_edgecolor"] = True
         weights = np.ones_like(job)/float(len(job)) # sum of bar heights => 1
@@ -312,8 +323,7 @@ def gender_vs_nowpain(reader, csvfile):
                                 mpain.append(p)
                         else:
                                 fpain.append(p)
-        #print(len(mpain))
-        #print(len(fpain))
+
         plt.rcParams["patch.force_edgecolor"] = True
         fig9, axs = plt.subplots(1, 2, sharey=True, figsize=(12,8))
         weights = np.ones_like(mpain)/float(len(mpain)) # sum of bar heights => 1
@@ -352,13 +362,13 @@ def gender_vs_relapsed_pain(reader, csvfile):
                                         gender.append(g);
                                 else:
                                         gender.append(g);
-        #print(len(gender))
+        
         fig10 = plt.figure(10)
         figure = fig10
         plt.rcParams["patch.force_edgecolor"] = True
         weights = np.ones_like(gender)/float(len(gender)) # sum of bar heights => 1
         n, bins, patches = plt.hist(x=sorted(gender), bins=[1,2,3], facecolor='blue',
-                            alpha=0.6, rwidth=0.3, align='left', weights=weights)
+                            alpha=0.8, rwidth=0.3, align='left', weights=weights)
         my_xticks = [1,2] #x-axis numbering
         plt.xticks(my_xticks)
         plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
@@ -382,7 +392,7 @@ def highpain_ages(reader, csvfile):
                     if p > 7:
                         d.append(abs(age))
 
-        #print(len(d))
+
         fig11 = plt.figure(11)
         figure = fig11
         plt.rcParams["patch.force_edgecolor"] = True
@@ -422,7 +432,250 @@ def users_with_all_sorts_of_pain(reader, csvfile):
                 if pain1 > 0 and pain2 > 0 and pain3 > 0:
                         count += 1
         print("Number of users with all sorts of pain: " + str(count))    
+
+def gender_vs_jobsituation(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        mjob=[]
+        fjob=[]
+        for row in reader:
+                j=row['jobsituation']
+                g=row['gender']
+                job = float(j)
+                if not job == -1:
+                        if g=='1' and not g=='-1':
+                                mjob.append(job)
+                        else:
+                                fjob.append(job)
+
+        plt.rcParams["patch.force_edgecolor"] = True
+        fig12, axs = plt.subplots(1, 2, sharey=True, figsize=(10,6))
+        weights = np.ones_like(mjob)/float(len(mjob)) # sum of bar heights => 1
+        N, bins, patches = axs[0].hist(x=sorted(mjob), bins=[1,2,3,4], facecolor='blue',
+                            alpha=0.8, rwidth=0.6, align='left', weights=weights)
+        my_xticks = [1,2,3] #x-axis numbering
+        plt.setp(axs, xticks = my_xticks)#, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[0].set_title('Males\' job situation',fontsize=14)
+        axs[0].text(1.6, 0.42, '1 = full time job \n2 = part time job\n3 = retired or unemployed', fontsize=12)
+        axs[0].set_ylabel('Sum of bar heights = 1')
+
+        weights = np.ones_like(fjob)/float(len(fjob)) # sum of bar heights => 1
+        N, bins, patches = axs[1].hist(x=sorted(fjob), bins=[1,2,3,4], facecolor='red',
+                            alpha=0.8, rwidth=0.6, align='left', weights=weights)
+        axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[1].set_title('Females\' job situation',fontsize=14)
+        axs[1].text(1.6, 0.42, '1 = full time job \n2 = part time job\n3 = retired or unemployed', fontsize=12)      
+        plt.savefig("Gender_job_distribution.png")
+
+def gender_vs_age(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        mage=[]
+        fage=[]
+        for row in reader:
+                a=row['age']
+                g=row['gender']
+                age = float(a)
+                if abs(age) < 130:
+                    if abs(age) > 5:
+                        if g=='1' and not g=='-1':
+                                mage.append(abs(age))
+                        else:
+                                fage.append(abs(age))
         
+        plt.rcParams["patch.force_edgecolor"] = True
+        fig13, axs = plt.subplots(1, 2, sharey=True, figsize=(10,6))
+        weights = np.ones_like(mage)/float(len(mage)) # sum of bar heights => 1
+        N, bins, patches = axs[0].hist(x=sorted(mage), bins=[20,25,30,35,40,45,50,55,60,65,70,75,80], facecolor='green',
+                            alpha=0.8, rwidth=1.0, weights=weights)
+        my_xticks = [20,25,30,35,40,45,50,55,60,65,70,75,80] #x-axis numbering
+        plt.setp(axs, xticks = my_xticks)#, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[0].set_title('Males\' age distribution',fontsize=14)
+        axs[0].set_ylabel('Sum of bar heights = 1')
+        axs[0].set_xlabel('Age (years)')
+
+
+        weights = np.ones_like(fage)/float(len(fage)) # sum of bar heights => 1
+        N, bins, patches = axs[1].hist(x=sorted(fage), bins=[20,25,30,35,40,45,50,55,60,65,70,75,80], facecolor='orange',
+                            alpha=1.0, rwidth=1.0, weights=weights)
+        axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[1].set_title('Females\' age distribution',fontsize=14)
+        axs[1].set_ylabel('Sum of bar heights = 1')
+        axs[1].set_xlabel('Age (years)')      
+        plt.savefig("Gender_age_distribution.png")
+        
+
+
+def gender_vs_jobsituation_if_high_pain_now(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        mjob=[]
+        fjob=[]
+        for row in reader:
+                j=row['jobsituation']
+                g=row['gender']
+                p=row['suffersnowpain']
+                pain=float(p)
+                job = float(j)
+                if not job == -1:
+                        if pain > 7:
+                                if g=='1' and not g=='-1':
+                                        mjob.append(job)
+                                else:
+                                        fjob.append(job)
+               
+        plt.rcParams["patch.force_edgecolor"] = True
+        fig14, axs = plt.subplots(1, 2, sharey=True, figsize=(10,6))
+        weights = np.ones_like(mjob)/float(len(mjob)) # sum of bar heights => 1
+        N, bins, patches = axs[0].hist(x=sorted(mjob), bins=[1,2,3,4], facecolor='blue',
+                            alpha=0.8, rwidth=0.6, align='left', weights=weights)
+        my_xticks = [1,2,3] #x-axis numbering
+        plt.setp(axs, xticks = my_xticks)#, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[0].set_title('Males\' job situation if pain now > 7',fontsize=14)
+        axs[0].text(1.36, 0.3, '1 = full time job \n2 = part time job\n3 = retired or\n       unemployed', fontsize=12)
+        axs[0].set_ylabel('Sum of bar heights = 1')
+
+        weights = np.ones_like(fjob)/float(len(fjob)) # sum of bar heights => 1
+        N, bins, patches = axs[1].hist(x=sorted(fjob), bins=[1,2,3,4], facecolor='red',
+                            alpha=0.8, rwidth=0.6, align='left', weights=weights)
+        axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[1].set_title('Females\' job situation if pain now > 7',fontsize=14)
+        axs[1].text(1.36, 0.3, '1 = full time job \n2 = part time job\n3 = retired or\n       unemployed', fontsize=12)      
+        plt.savefig("Gender_job_highpain_distribution.png")
+
+def education_distribution(reader, csvfile):
+        d=[]
+        fig15 = plt.figure(15)
+        figure = fig15
+        csvfile.seek(0) # going back to...
+        next(reader)    # ...the second line of csv file
+        for row in reader:
+                e=row['degree']
+                edu=float(e)
+                if edu > -1:
+                        d.append(edu)
+
+        plt.rcParams["patch.force_edgecolor"] = True
+        weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
+        n, bins, patches = plt.hist(x=d, bins=[1,2,3,4,5,6,7,8,9],
+                                    facecolor='orange',alpha=1.0, rwidth=0.6, weights=weights, align='left')
+        plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        plt.xlabel('Education',fontsize=16)
+        plt.ylabel('Sum of bar heights = 1',fontsize=14)
+        plt.title('Educational distribution of the users',fontsize=22)
+        plt.text(2.6, 0.15, '1 = Lowest\n       education \n\n8 = Doctoral\n       degree',
+                 fontsize=14)
+        maxfreq = n.max()
+        plt.savefig("Educational_distribution.png") 
+
+def education_vs_highpain(reader, csvfile):
+        d=[]
+        fig16 = plt.figure(16)
+        figure = fig16
+        csvfile.seek(0) # going back to...
+        next(reader)    # ...the second line of csv file
+        for row in reader:
+                p=row['suffersnowpain']
+                pain=float(p)
+                e=row['degree']
+                edu=float(e)
+                if edu > -1 and pain > 7:
+                        d.append(edu)
+
+        plt.rcParams["patch.force_edgecolor"] = True
+        weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
+        n, bins, patches = plt.hist(x=d, bins=[1,2,3,4,5,6,7,8,9],
+                                    facecolor='red',alpha=0.7, rwidth=0.6, weights=weights, align='left')
+        plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        plt.xlabel('Education',fontsize=16)
+        plt.ylabel('Sum of bar heights = 1',fontsize=14)
+        plt.title('Education if pain now > 7',fontsize=22)
+        plt.text(2.6, 0.15, '1 = Lowest\n       education \n\n8 = Doctoral\n       degree',
+                 fontsize=14)
+        maxfreq = n.max()
+        plt.savefig("Education_vs_highpain_distribution.png") 
+
+
+def gender_vs_education(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        medu=[]
+        fedu=[]
+        for row in reader:
+                e=row['degree']
+                g=row['gender']
+                edu = float(e)
+                if g=='1' and not g=='-1':
+                        medu.append(edu)
+                else:
+                        fedu.append(edu)
+                        
+        plt.rcParams["patch.force_edgecolor"] = True
+        fig17, axs = plt.subplots(1, 2, sharey=True, figsize=(10,6))
+        weights = np.ones_like(medu)/float(len(medu)) # sum of bar heights => 1
+        N, bins, patches = axs[0].hist(x=sorted(medu), bins=[1,2,3,4,5,6,7,8,9], facecolor='orange',
+                            alpha=0.8, rwidth=0.6, weights=weights, align='left')
+        my_xticks = [1,2,3,4,5,6,7,8] #x-axis numbering
+        plt.setp(axs, xticks = my_xticks)#, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[0].set_title('Males\' education',fontsize=14)
+        axs[0].set_ylabel('Sum of bar heights = 1')
+        axs[0].set_xlabel('Education')
+
+
+        weights = np.ones_like(fedu)/float(len(fedu)) # sum of bar heights => 1
+        N, bins, patches = axs[1].hist(x=sorted(fedu), bins=[1,2,3,4,5,6,7,8,9], facecolor='red',
+                            alpha=0.6, rwidth=0.6, weights=weights, align='left')
+        axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[1].set_title('Females\' education',fontsize=14)
+        axs[1].set_ylabel('Sum of bar heights = 1')
+        axs[1].set_xlabel('Education')
+        plt.savefig("Gender_education_distribution.png")
+
+
+def gender_vs_age_if_highpain(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        mage=[]
+        fage=[]
+        for row in reader:
+                a=row['age']
+                g=row['gender']
+                age = float(a)
+                p=row['suffersnowpain']
+                pain = float(p)
+                if abs(age) < 130:
+                    if abs(age) > 5:
+                            if pain > 7: 
+                                if g=='1' and not g=='-1':
+                                        mage.append(abs(age))
+                                else:
+                                        fage.append(abs(age))
+                
+        plt.rcParams["patch.force_edgecolor"] = True
+        fig18, axs = plt.subplots(1, 2, sharey=True, figsize=(10,6))
+        weights = np.ones_like(mage)/float(len(mage)) # sum of bar heights => 1
+        N, bins, patches = axs[0].hist(x=sorted(mage), bins=[20,25,30,35,40,45,50,55,60,65,70,75,80], facecolor='green',
+                            alpha=1.0, rwidth=1.0, weights=weights)
+        my_xticks = [20,25,30,35,40,45,50,55,60,65,70,75,80] #x-axis numbering
+        plt.setp(axs, xticks = my_xticks)#, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[0].set_title('Males\' age distribution if pain now > 7',fontsize=14)
+        axs[0].set_ylabel('Sum of bar heights = 1')
+        axs[0].set_xlabel('Age (years)')
+
+
+        weights = np.ones_like(fage)/float(len(fage)) # sum of bar heights => 1
+        N, bins, patches = axs[1].hist(x=sorted(fage), bins=[20,25,30,35,40,45,50,55,60,65,70,75,80], facecolor='orange',
+                            alpha=0.5, rwidth=1.0, weights=weights)
+        axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        axs[1].set_title('Females\' age distribution if pain now > 7',fontsize=14)
+        axs[1].set_ylabel('Sum of bar heights = 1')
+        axs[1].set_xlabel('Age (years)')      
+        plt.savefig("Gender_age_if_high_pain_distribution.png")
 
 # Print desired distribution (comment out not needed function calls):
 def main():
@@ -435,6 +688,7 @@ def main():
                 pastpain(reader, csvfile)
                 
                 gender(reader, csvfile)
+                
                 corr_matrix(reader, csvfile)
                 
                 painjob(reader, csvfile)
@@ -445,10 +699,18 @@ def main():
                 gender_vs_relapsed_pain(reader, csvfile)
                 highpain_ages(reader, csvfile)
                 
+                gender_vs_jobsituation(reader, csvfile)
+                gender_vs_age(reader, csvfile)
+                gender_vs_jobsituation_if_high_pain_now(reader, csvfile)
+                
+                education_distribution(reader, csvfile)
+                education_vs_highpain(reader, csvfile)
+                gender_vs_education(reader, csvfile)
+                
+                gender_vs_age_if_highpain(reader, csvfile)
+        
                 plt.show()
 
-                users_with_no_pain(reader, csvfile)
-                users_with_all_sorts_of_pain(reader, csvfile)
                 
 
 if __name__ == '__main__':
