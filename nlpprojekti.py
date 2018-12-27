@@ -51,7 +51,7 @@ with open('solutions_perusmuoto.csv') as csvfile:
 
 		solutions.append([row['Rivi'], s, row['Otsikko'], row['Sisus']])
 
-		str1=row['Otsikko']
+		str1=str(row['Otsikko'])
 		prt=str1.split()
 		for s in prt:
 			if s not in stopwords:
@@ -64,7 +64,7 @@ with open('solutions_perusmuoto.csv') as csvfile:
 			else:
 				removed_words.append(s)
 
-		str2=row['Sisus']
+		str2=str(row['Sisus'])
 		prt=str2.split()
 		for s in prt:
 			if s not in stopwords:
@@ -230,7 +230,7 @@ for t in technical_vocabulary:
 for a in technical_vocabulary:
 	counter=0
 	for s in solutions:
-		terms = s[3].split()
+		terms = str(s[3]).split()
 		for b in terms:
 			if len(b)>0:
 				if a_in_b(a,b): # Check if even part of word incldues term
@@ -264,7 +264,7 @@ for a in disease:
 	counter=0
 	if len(a)>0:
 		for s in solutions:
-			terms = s[3].split()
+			terms = str(s[3]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a,b): # Check if even part of word incldues term
@@ -295,13 +295,13 @@ for a in symptom:
 	counter=0
 	if len(a)>0:
 		for s in solutions:
-			terms = s[3].split()
+			terms = str(s[3]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b): # Check if even part of word incldues term
 						counter=counter+1
 		for s in users:
-			terms = s[1].split()
+			terms = str(s[1]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b):
@@ -326,13 +326,13 @@ for a in therapy:
 	counter=0
 	if len(a)>0:
 		for s in solutions:
-			terms = s[3].split()
+			terms = str(s[3]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b): # Check if even part of word incldues term
 						counter=counter+1
 		for s in users:
-			terms = s[1].split()
+			terms = str(s[1]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b):
@@ -357,13 +357,13 @@ for a in lifestyle:
 	counter=0
 	if len(a)>0:
 		for s in solutions:
-			terms = s[3].split()
+			terms = str(s[3]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b): # Check if even part of word incldues term
 						counter=counter+1
 		for s in users:
-			terms = s[1].split()
+			terms = str(s[1]).split()
 			for b in terms:
 				if len(b)>0:
 					if a_in_b(a[0],b):
@@ -418,7 +418,7 @@ f.write('Document, positive, negative ' + '\n')
 
 for s in solutions:
 	f.write(s[1])
-	text_list = s[3].split()
+	text_list = str(s[3]).split()
 	text_set = set(text_list)
 	plus_counter=0
 	neg_counter=0
@@ -592,7 +592,7 @@ for s in technical_vocabulary:
 f.write(', SAME, DIFFERENT' +','+ 'Disease' +','+ 'Symptom' +','+ 'Therapy'+','+'Lifestyle'+ '\n')
 
 for s in solutions:
-	text_set = set(s[3].split())
+	text_set = set(str(s[3]).split())
 	diff_set=set(text_set.difference(technical_vocabulary_set))
 	leikkaus_set=set(text_set.intersection(technical_vocabulary_set))
 	#print('Doc:' + s[1] + ' Common: ' + str(len(leikkaus_set)) + ', Different: ' + str(len(diff_set)))
@@ -618,12 +618,12 @@ for s in solutions:
 f.write('\n')
 
 for s in solutions:
-	text_set = set(s[3].split())
+	text_set = set(str(s[3]).split())
 	common_list = []
 	f.write(s[1])
 	for d in solutions:
 		# verrataan jokaiseen solutionin settiin
-		leikkaus_set=set(text_set.intersection(set(d[3].split())))
+		leikkaus_set=set(text_set.intersection(set(str(d[3]).split())))
 		# muodostetaan samalla yhteistä listaa kaikista
 		f.write(',' + str(len(leikkaus_set)))
 		for i in leikkaus_set:
