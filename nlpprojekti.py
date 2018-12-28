@@ -79,7 +79,7 @@ def create_vocabulary():
 #			prt=str1.split()
 			prt = nltk.word_tokenize(str1)
 			for ss in prt:
-				s=strip_word(ss)
+				s=strip_word(ss).lower()
 				if s not in stopwords:
 					if s not in vocabulary:
 						vocabulary.append(str(s))
@@ -94,7 +94,7 @@ def create_vocabulary():
 			#prt=str2.split()
 			prt = nltk.word_tokenize(str1)
 			for ss in prt:
-				s=strip_word(ss)
+				s=strip_word(ss).lower()
 				if s not in stopwords:
 					if s not in vocabulary:
 						vocabulary.append(str(s))
@@ -121,7 +121,7 @@ def create_vocabulary():
 			#prt=str1.split(',')
 			prt = nltk.word_tokenize(str1)
 			for ss in prt:
-				s=strip_word(ss)
+				s=strip_word(ss).lower()
 				if s not in stopwords:
 					if s not in vocabulary:
 						vocabulary.append(str(s))
