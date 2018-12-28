@@ -3,6 +3,7 @@ import sys
 import csv
 import string
 import re
+import nltk
 
 technical_vocabulary = []
 solutions = []
@@ -75,7 +76,8 @@ def create_vocabulary():
 			solutions.append([row['Rivi'], s, row['Otsikko'], row['Sisus']])
 
 			str1=str(row['Otsikko'])
-			prt=str1.split()
+#			prt=str1.split()
+			prt = nltk.word_tokenize(str1)
 			for ss in prt:
 				s=strip_word(ss)
 				if s not in stopwords:
@@ -89,7 +91,8 @@ def create_vocabulary():
 					removed_words.append(s)
 
 			str2=str(row['Sisus'])
-			prt=str2.split()
+			#prt=str2.split()
+			prt = nltk.word_tokenize(str1)
 			for ss in prt:
 				s=strip_word(ss)
 				if s not in stopwords:
@@ -115,7 +118,8 @@ def create_vocabulary():
 			users.append([row['User_id'], row['Howtakescare']])
 
 			str1=row['Howtakescare']
-			prt=re.split(' ,:',str1)
+			#prt=str1.split(',')
+			prt = nltk.word_tokenize(str1)
 			for ss in prt:
 				s=strip_word(ss)
 				if s not in stopwords:
