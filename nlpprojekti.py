@@ -2,6 +2,7 @@
 import sys
 import csv
 import string
+import re
 
 technical_vocabulary = []
 solutions = []
@@ -23,7 +24,7 @@ stopwords = []
 removed_words = []
 
 def strip_word(s):
-	return s.strip(' ,.+-()\/')
+	return s.strip(' ,.+-()\/"')
 
 
 def a_in_b(a,b):
@@ -114,7 +115,7 @@ def create_vocabulary():
 			users.append([row['User_id'], row['Howtakescare']])
 
 			str1=row['Howtakescare']
-			prt=str1.split()
+			prt=re.split(' ,:',str1)
 			for ss in prt:
 				s=strip_word(ss)
 				if s not in stopwords:
