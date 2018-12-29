@@ -50,6 +50,9 @@ def read_stop_words():
     print("Stopwords read")
 
 def lemmatize_files():
+    os.system("if not exist users.csv echo SERIOUS ERROR! File users.csv not found!")
+    os.system("if not exist solutions.csv echo SERIOUS ERROR! File solutions.csv not found!")
+    #tähän vielä loput csv:t
     print("Starting lemmatization. This can take a while, please wait.")
     os.system("if exist users_lemmatized.csv del users_lemmatized.csv")
     os.system("java -jar las-fi lemmatize users.csv --locale fi")
@@ -57,6 +60,7 @@ def lemmatize_files():
     os.system("if exist solutions_lemmatized.csv del solutions_lemmatized.csv")
     os.system("java -jar las-fi lemmatize solutions.csv --locale fi")
     os.system("ren solutions.csv.lemmatized solutions_lemmatized.csv")
+    
     print("Lemmatization ready.")
     print("Lemmatized files are users_lemmatized.csv and solutions_lemmatized.csv")
     
