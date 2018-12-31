@@ -62,7 +62,7 @@ def create_vocabulary():
 	vocabulary=[] # THIS will contain all the words along the journey
 	string_count=[] # this will have frequence
 
-	with open('solutions_perusmuoto.csv') as csvfile:
+	with open('solutions_lemmatized.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['Rivi','User', 'Otsikko', 'Sisus'])
 		admin_id=1;
 		for row in reader:
@@ -111,7 +111,7 @@ def create_vocabulary():
 	########################################
 	# Read users document
 	########################################
-	with open('users.csv') as csvfile:
+	with open('users_lemmatized.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['User_id','Gender', 'Age', 'Region', 'Jobs','Degree','Howactive','Suffer','Sufferi','Sufffernow','Surge','Howtakescare'])
 		admin_id=1;
 		for row in reader:
