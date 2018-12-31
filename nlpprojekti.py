@@ -294,7 +294,7 @@ def create_histograms():
 	# histogram list to file
 	f=open( "output_histogram_technical_vocabulary.csv","w")
 	for t in tv_histog[:10]:
-		f.write(t[0] + ',' + t[1] + ',' + '\n')
+		f.write(str(t[0]) + ',' + str(t[1]) + ',' + '\n')
 		print(t)
 
 	###################################################3
@@ -325,7 +325,7 @@ def create_histograms():
 	# histogram list to file
 	f=open( "output_histogram_disease.csv","w")
 	for t in disease[:10]:
-		f.write(t[0] + ',' + t[1] + ',' + t[2] + '\n')
+		f.write(str(t[0]) + ',' + str(t[1]) + ',' + str(t[2]) + '\n')
 		print(t)
 
 	###########################################
@@ -418,7 +418,7 @@ def create_histograms():
 	# histogram list to file
 	f=open( "output_histogram_lifestyle.csv","w")
 	for t in lifestyle[:10]:
-		f.write(t[0] + ',' + t[1] + ',' + t[2] + '\n')
+		f.write(str(t[0]) + ',' + str(t[1]) + ',' + str(t[2]) + '\n')
 		print(t)
 
 def create_sentiment_analysis():
