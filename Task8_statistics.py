@@ -709,7 +709,7 @@ def main():
                 
                 gender_vs_age_if_highpain(reader, csvfile)
         
-                plt.show()
+                #plt.show()
 
                 
 
