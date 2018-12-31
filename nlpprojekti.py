@@ -5,6 +5,7 @@ import string
 import re
 import nltk
 
+
 technical_vocabulary = []
 solutions = []
 users = []
@@ -386,7 +387,7 @@ def create_histograms():
 	# histogram list to file
 	f=open( "output_histogram_therapy.csv","w")
 	for t in therapy[:10]:
-		f.write(t[0] + ',' + t[1] + ',' + t[2] + '\n')
+		f.write(str(t[0]) + ',' + str(t[1]) + ',' + str(t[2]) + '\n')
 		print(t)
 
 	###############################################
@@ -676,11 +677,9 @@ def compare_documents_with_technical_voc():
 		#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
 
 
-
-
-
 if __name__ == '__main__':
 	create_vocabulary()
 	create_histograms()
 	create_sentiment_analysis()
 	compare_documents_with_technical_voc()
+
