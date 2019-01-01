@@ -422,16 +422,23 @@ def users_with_all_sorts_of_pain(reader, csvfile):
         csvfile.seek(0)
         next(reader)
         count = 0
+        i = 0
+        rows = 0
         for row in reader:
+                rows += 1
                 p1=row['suffersnowpain']
                 p2=row['sufferedpastpain']
                 p3=row['sufferedpastsciaticapain']
+                if not (p1=='-1' or p2=='-1' or p3=='-1'):
+                        i += 1
                 pain1 = float(p1)
                 pain2 = float(p2)
                 pain3 = float(p3)
                 if pain1 > 0 and pain2 > 0 and pain3 > 0:
                         count += 1
-        print("Number of users with all sorts of pain: " + str(count))    
+        print("Number of users with all sorts of pain: " + str(count))
+        print("Number of valid user answers: " + str(i))
+        print("Total number of rows in users.csv: " + str(rows))
 
 def gender_vs_jobsituation(reader, csvfile):
         csvfile.seek(0)
@@ -677,11 +684,47 @@ def gender_vs_age_if_highpain(reader, csvfile):
         axs[1].set_xlabel('Age (years)')      
         plt.savefig("Gender_age_if_high_pain_distribution.png")
 
+def relapsed_vs_education(reader, csvfile):
+        csvfile.seek(0)
+        next(reader)
+        d=[]
+        edu=[]
+        for row in reader:
+                pain1=row['sufferedpastpain']  
+                pain2=row['sufferedpastsciaticapain']
+                p1 = float(pain1)
+                p2 = float(pain2)
+                e=row['degree']
+                edu=float(e)
+                if (p1 == 3 and edu > -1):
+                                d.append(edu)
+                else:
+                        if (p2 == 3 and edu > -1):
+                                d.append(edu)
+                                
+        fig19 = plt.figure(19)             
+        plt.rcParams["patch.force_edgecolor"] = True
+        weights = np.ones_like(d)/float(len(d)) # sum of bar heights => 1
+        n, bins, patches = plt.hist(x=d, bins=[1,2,3,4,5,6,7,8,9], facecolor='yellow',
+                            alpha=1.0, rwidth=0.5, align='left', weights=weights)
+        my_xticks = [1,2,3,4,5,6,7,8] #x-axis numbering
+        plt.xticks(my_xticks)       
+        plt.grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
+        plt.xlabel('Education')
+        plt.ylabel('Sum of bar heights = 1',fontsize=14)
+        plt.title('Education if relapsed pain',fontsize=22)
+        plt.text(2.8, 0.13, '1 = Lowest\n       education \n\n8 = Doctoral\n       degree',
+                 fontsize=14)
+        maxfreq = n.max()             
+        plt.savefig("Education_if_relapsed_pain")
+
 # Print desired distribution (comment out not needed function calls):
 def main():
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)
-                
+                users_with_no_pain(reader, csvfile)
+                users_with_all_sorts_of_pain(reader, csvfile)
+                '''
                 ages(reader, csvfile)
                 jobsit(reader, csvfile)                
                 nowpain(reader, csvfile)
@@ -709,8 +752,9 @@ def main():
                 
                 gender_vs_age_if_highpain(reader, csvfile)
         
-                #plt.show()
-
+                plt.show()
+                relapsed_vs_education(reader, csvfile)
+                '''
                 
 
 if __name__ == '__main__':
