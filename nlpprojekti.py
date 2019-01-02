@@ -634,6 +634,7 @@ def compare_documents_with_technical_voc():
 	f.write(', SAME, DIFFERENT' +','+ 'Disease' +','+ 'Symptom' +','+ 'Therapy'+','+'Lifestyle'+ '\n')
 
 	for s in solutions:
+		same_words = []
 		text_set = set(str(s[3]).split())
 		diff_set=set(text_set.difference(technical_vocabulary_set))
 		leikkaus_set=set(text_set.intersection(technical_vocabulary_set))
@@ -642,18 +643,24 @@ def compare_documents_with_technical_voc():
 		for sana in technical_vocabulary:
 			if( sana in list(leikkaus_set)):
 				f.write(',' + '1')
+				same_words.append(sana)
 			else:
 				f.write(',')
 				sss="0"
 
+
 		f.write(',' + str(len(leikkaus_set)) + ',' + str(len(diff_set)))
-		f.write(',' + str(len(dis_set.intersection(leikkaus_set))) + ',' + str(len(sym_set.intersection(leikkaus_set))) + ',' + str(len(the_set.intersection(leikkaus_set))) + ','+ str(len(lif_set.intersection(leikkaus_set))))
+		same_set = set(same_words)
+		f.write(',' + str(len(dis_set.intersection(same_set))) + ',' + str(len(sym_set.intersection(same_set))) + ',' + str(len(the_set.intersection(same_set))) + ','+ str(len(lif_set.intersection(same_set))))
+		for p in list(same_set):
+			f.write(', ' + str(p) + ' ' )
 		f.write('\n')
 
 	################################################################
 	# Overlapping between user documents with other user document
 	print('Then calculate intersection with all other user documents')
 	f=open( "output_document_vs_document_similarity.csv","w")
+	cfile=open( "output_document_commonality.csv","w")
 	f.write(' ')
 	for s in solutions:
 		f.write(','+ s[1] )
@@ -663,18 +670,25 @@ def compare_documents_with_technical_voc():
 		text_set = set(str(s[3]).split())
 		common_list = []
 		f.write(s[1])
+		cfile.write(s[1])
 		for d in solutions:
 			# verrataan jokaiseen solutionin settiin
 			leikkaus_set=set(text_set.intersection(set(str(d[3]).split())))
 			# muodostetaan samalla yhteistä listaa kaikista
 			f.write(',' + str(len(leikkaus_set)))
+			if (s == d):
+				cfile.write(',' + str(len(leikkaus_set)))
+
 			for i in leikkaus_set:
 				if(s != d): # Decline diagonal, comparison against itself
 					if i not in common_list:
 						common_list.append(i)
-		f.write(',' + str(len(common_list)) + '\n')
 
-		#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
+		f.write(',' + str(len(common_list)) + '\n')
+		cfile.write(',' + str(len(common_list)) + '\n')
+
+
+#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
 
 
 if __name__ == '__main__':
