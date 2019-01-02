@@ -1,11 +1,19 @@
-﻿#import nltk
+﻿"""
+Lisätty lemmaus.
+Lisätty muutama str-muunnos
+"""
+
 import sys
 import csv
 import string
 import re
 import nltk
+import os
 
-
+stopwords = []
+removed_words = []
+vocabulary = []
+string_count = []
 technical_vocabulary = []
 solutions = []
 users = []
@@ -22,12 +30,8 @@ lifestyle = []
 lif_set = set()
 lifestyle_sh = []
 
-stopwords = []
-removed_words = []
-
 def strip_word(s):
 	return s.strip(' ,.+-()\/"')
-
 
 def a_in_b(a,b):
 	if a is None:
@@ -41,26 +45,39 @@ def a_in_b(a,b):
 			return False
 	return True
 
+def lemmatize_files():
+    """"
+    Lemmatization. Need file las-fi, no extention in name allowed
+    """
+    os.system("if not exist users.csv echo SERIOUS ERROR! File users.csv not found!")
+    os.system("if not exist solutions.csv echo SERIOUS ERROR! File solutions.csv not found!")
+    #tähän vielä loput csv:t
+    print("Starting lemmatization. This can take a while, please wait.")
+    os.system("if exist users_lemmatized.csv del users_lemmatized.csv")
+    os.system("java -jar las-fi lemmatize users.csv --locale fi")
+    os.system("ren users.csv.lemmatized users_lemmatized.csv")
+    os.system("if exist solutions_lemmatized.csv del solutions_lemmatized.csv")
+    os.system("java -jar las-fi lemmatize solutions.csv --locale fi")
+    os.system("ren solutions.csv.lemmatized solutions_lemmatized.csv") 
+    print("Lemmatization ready.") 
+    print("Lemmatized files are users_lemmatized.csv and solutions_lemmatized.csv")
+
 def create_vocabulary():
 	##################################
 	# Read Stopwords in
 	##################################
-	stopwords=[]
-	removed_words=[]
+
 	with open('stopwords.txt') as csvfile:
 		reader = csv.DictReader(csvfile, ['Sana'])
 		for row in reader:
 			#print(row['Sana'])
 			stopwords.append(row['Sana'])
-
 	#print(stopwords)
 	print("Stopwords read")
 
 	###################################
 	# Start to create vocabulary
 	###################################
-	vocabulary=[] # THIS will contain all the words along the journey
-	string_count=[] # this will have frequence
 
 	with open('solutions_lemmatized.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['Rivi','User', 'Otsikko', 'Sisus'])
@@ -73,9 +90,7 @@ def create_vocabulary():
 				admin_id=admin_id+1
 			else:
 				s=row['Rivi']
-
 			solutions.append([row['Rivi'], s, row['Otsikko'], row['Sisus']])
-
 			str1=str(row['Otsikko'])
 #			prt=str1.split()
 			prt = nltk.word_tokenize(str1)
@@ -90,7 +105,6 @@ def create_vocabulary():
 						string_count[ind]=int(string_count[ind])+1
 				else:
 					removed_words.append(s)
-
 			str2=str(row['Sisus'])
 			#prt=str2.split()
 			prt = nltk.word_tokenize(str1)
@@ -105,19 +119,18 @@ def create_vocabulary():
 						string_count[ind] = int(string_count[ind]) + 1
 				else:
 					removed_words.append(s)
-
 	print('Solutions file read in')
 
 	########################################
 	# Read users document
 	########################################
+
 	with open('users_lemmatized.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['User_id','Gender', 'Age', 'Region', 'Jobs','Degree','Howactive','Suffer','Sufferi','Sufffernow','Surge','Howtakescare'])
 		admin_id=1;
 		for row in reader:
 			#print(row['Rivi'], row['Sisus'])
 			users.append([row['User_id'], row['Howtakescare']])
-
 			str1=row['Howtakescare']
 			#prt=str1.split(',')
 			prt = nltk.word_tokenize(str1)
@@ -132,16 +145,12 @@ def create_vocabulary():
 						string_count[ind]=int(string_count[ind])+1
 				else:
 					removed_words.append(s)
-
 	print('Users read')
-
 	#input("Press Enter to continue...")
 
 	########################################
 	# Read technical vocabulary
 	########################################
-
-
 
 	with open('technical_vocabulary.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['disease','dis_num','disease_sh', 'symptom', 'sym_num', 'symptom_sh', 'therapy', 'the_num','therapy_sh', 'lifestyle', 'lif_num' , 'lifestyle_sh'])
@@ -161,18 +170,15 @@ def create_vocabulary():
 						else:
 								ind = vocabulary.index(s)
 								string_count[ind] = int(string_count[ind]) + 1
-
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
 						removed_words.append(s)
-
 			# Read Symptom column in
 			str2=row['symptom']
 			if (str2 != ''):
 				symptom.append([row['symptom'], row['symptom_sh']])
 				sym_set.add(row['symptom'])
-
 				prt=str1.split()
 				for s in prt:
 					if s not in stopwords:
@@ -182,19 +188,16 @@ def create_vocabulary():
 						else:
 								ind = vocabulary.index(s)
 								string_count[ind] = int(string_count[ind]) + 1
-
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
 						removed_words.append(s)
-
 			# Read therapy column in
 			str2=row['therapy']
 			if(str2 != ''):#!= ''):
 				therapy.append([row['therapy'], row['therapy_sh']])
 				the_set.add(row['therapy'])
-
-				prt=str2.split()
+				prt=str(str2).split()
 				for s in prt:
 					if s not in stopwords:
 						if s not in vocabulary:
@@ -203,19 +206,16 @@ def create_vocabulary():
 						else:
 								ind = vocabulary.index(s)
 								string_count[ind] = int(string_count[ind]) + 1
-
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
 						removed_words.append(s)
-
 			# Read lifestyle column in
 			str2=row['lifestyle']
 			if (str2 != ''):
 				lifestyle.append([row['lifestyle'], row['lifestyle_sh']])
 				lif_set.add(row['lifestyle'])
-
-				prt=str2.split()
+				prt=str(str2).split()
 				for s in prt:
 					if s not in stopwords:
 						if s not in vocabulary:
@@ -224,12 +224,10 @@ def create_vocabulary():
 						else:
 								ind = vocabulary.index(s)
 								string_count[ind] = int(string_count[ind]) + 1
-
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
 						removed_words.append(s)
-
 	print('Technical vocabulary read in')
 	#print(technical_vocabulary)
 	#input("Press Enter to continue...")
@@ -237,11 +235,11 @@ def create_vocabulary():
 	##########################################
 	# Create vocabulary file
 	##########################################
+
 	f=open( "output_dictionary.txt","w")
 	for s in vocabulary:
 		#print(s + ' ' + str(string_count[vocabulary.index(s)]))
 		f.write(s + ',' + str(string_count[vocabulary.index(s)]) + '\n')
-
 	print('Vocabulary file created')
 
 	##########################################
@@ -251,22 +249,18 @@ def create_vocabulary():
 	f=open("output_removed_words.txt","w")
 	for s in removed_words:
 		f.write(s + ',')
-
 	print('Removed words list created')
-
-
 
 def create_histograms():
 	######################################################
 	######################################################
 	# Histogram - now word, sh - lets add count, category
 	######################################################
-	terms_not_in_technical_voc = []
 
+	terms_not_in_technical_voc = []
 	tv_count = []
 	for t in technical_vocabulary:
 		tv_count.append('0')
-
 	for a in technical_vocabulary:
 		counter=0
 		for s in solutions:
@@ -282,7 +276,6 @@ def create_histograms():
 					if a_in_b(a,b):
 						counter=counter+1
 		tv_count[technical_vocabulary.index(a)]=str(counter)
-
 	# Sort histogram list
 	def histogFunc(f):
 		return(int(f[1]))
@@ -290,7 +283,6 @@ def create_histograms():
 	for t in technical_vocabulary:
 		tv_histog.append([t,tv_count[technical_vocabulary.index(t)]])
 	tv_histog.sort(reverse=True, key=histogFunc)
-
 	# histogram list to file
 	f=open( "output_histogram_technical_vocabulary.csv","w")
 	for t in tv_histog[:10]:
@@ -299,6 +291,7 @@ def create_histograms():
 
 	###################################################3
 	# Histogram for disease
+
 	print('Histogram for disease words')
 	for a in disease:
 		counter=0
@@ -316,12 +309,10 @@ def create_histograms():
 						if a_in_b(a,b):
 							counter=counter+1
 			a.append(str(counter))
-
 	# Sort histogram list
 	def histogCat(f):
 		return(int(f[2]))
 	disease.sort(reverse=True, key=histogCat)
-
 	# histogram list to file
 	f=open( "output_histogram_disease.csv","w")
 	for t in disease[:10]:
@@ -330,6 +321,7 @@ def create_histograms():
 
 	###########################################
 	# histogram for Symptom
+
 	print('Histogram for Symptom words')
 	for a in symptom:
 		counter=0
@@ -347,20 +339,19 @@ def create_histograms():
 						if a_in_b(a[0],b):
 							counter=counter+1
 			symptom[symptom.index(a)].append(str(counter))
-
 	# Sort histogram list
 	def histogCat(f):
 		return(int(f[2]))
 	symptom.sort(reverse=True, key=histogCat)
-
 	# histogram list to file
 	f=open( "output_histogram_symptom.csv","w")
 	for t in symptom[:10]:
-		f.write(t[0] + ',' + t[1] + ',' + t[2] + '\n')
+		f.write(str(t[0]) + ',' + str(t[1]) + ',' + str(t[2]) + '\n')
 		print(t)
 
 	##################################################
 	# Histogram therapylle
+
 	print('histogram for therapy words')
 	for a in therapy:
 		counter=0
@@ -378,12 +369,10 @@ def create_histograms():
 						if a_in_b(a[0],b):
 							counter=counter+1
 			therapy[therapy.index(a)].append(str(counter))
-
 	# Sort histogram list
 	def histogCat(f):
 		return(int(f[2]))
 	therapy.sort(reverse=True, key=histogCat)
-
 	# histogram list to file
 	f=open( "output_histogram_therapy.csv","w")
 	for t in therapy[:10]:
@@ -392,6 +381,7 @@ def create_histograms():
 
 	###############################################
 	# Histogram for lifestyle
+
 	print('Histogram for lifestyle words')
 	for a in lifestyle:
 		counter=0
@@ -409,12 +399,10 @@ def create_histograms():
 						if a_in_b(a[0],b):
 							counter=counter+1
 			lifestyle[lifestyle.index(a)].append(str(counter))
-
 	# Sort histogram list
 	def histogCat(f):
 		return(int(f[2]))
 	lifestyle.sort(reverse=True, key=histogCat)
-
 	# histogram list to file
 	f=open( "output_histogram_lifestyle.csv","w")
 	for t in lifestyle[:10]:
@@ -426,9 +414,9 @@ def create_sentiment_analysis():
 	##########################################
 	# Sentiment vocabulary
 	##########################################
+
 	sentiments_pos=[]
 	sentiments_neg=[]
-
 	with open('sentiment_words.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['word','wor', 'sent'])
 		for row in reader:
@@ -444,19 +432,16 @@ def create_sentiment_analysis():
 
 	########################################################
 	# Sentiment analysis for solutions document
+
 	print('Positivness versus negativness in solution docuemnts')
 	sentiment_solutions=[]
 	sentiment_users=[]
-
 	def toisesta(r):
 		return int(r[1])
-
 	def kolmannesta(r):
 		return int(r[2])
-
 	f=open( "output_sentiment_analysis_documents.csv","w")
 	f.write('Document, positive, negative ' + '\n')
-
 	for s in solutions:
 		f.write(s[1])
 		text_list = str(s[3]).split()
@@ -465,7 +450,6 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
-
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
@@ -477,9 +461,7 @@ def create_sentiment_analysis():
 						plus.append(p + ' löytyi sanasta ' + r)
 			if on_sis >= len(prt): # Check if all words of sentiment words in row exist in solutions details
 				plus_counter = plus_counter + 1 # stemmed wor may exist in several words in user document but only own count
-
 		f.write(',' + str(plus_counter))
-
 		# Same for negatives
 		for i in sentiments_neg:
 			prt = i.split()
@@ -491,45 +473,37 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if (on_sis >= len(prt)) and (on_sis > 0):
 					neg_counter = neg_counter + 1
-
 		f.write(',' + str(neg_counter))
-
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-
 		sentiment_solutions.append([str(solutions.index(s)), str(plus_counter),str(neg_counter)])
-
 	sentiment_solutions.sort(reverse=True, key=toisesta )
 	print('Dokumnetit joissa eninten positiivisia sanoja ')
 	print(sentiment_solutions[:5])
 	sentiment_solutions.sort(reverse=True, key=kolmannesta )
 	print(' Dokumnetit joissa eniten negatiiivisia sanoja ')
 	print(sentiment_solutions[:5])
-
 	'''	print('Näistä pos sanoja etitään' )
 		print(text_list)
 		print('\n')
 		print('Tässä haettavat postiiiviset sanat' + 'n')
 		print(sentiments_pos )
 		print(plus)
-	
 		print('Tässä haettavat negatiiviset  sanat')
 		print(sentiments_neg )
 		print(neg)
-	
 		print('+n' + 'Tulos: Doc ' + s[1] + ' Positive: ' + str(plus_counter) + ', Negative: ' + str(neg_counter) + '\n')
 	'''
 
 	########################################################
 	# Sentiment analysis for users document
-	print('Positivness versus negativness in user docuemnts')
 
+	print('Positivness versus negativness in user docuemnts')
 	f=open( "output_sentiment_analysis_userdoc.csv","w")
 	f.write('Document, positive, negative ' + '\n')
-
 	for s in users:
 		f.write(s[0])
 		text_list = s[1].split()
@@ -538,22 +512,18 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
-
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
 			on_sis = 0;
 			for p in prt:
-
 				for r in text_list:
 					if a_in_b(p,r):
 						on_sis=on_sis+1
 						plus.append(p + ' löytyi sanasta ' + r)
 			if (on_sis >= len(prt)) and (on_sis > 0): # Check if all words of sentiment words in row exist in solutions details
 				plus_counter = plus_counter + 1 # stemmed wor may exist in several words in user document but only own count
-
 		f.write(',' + str(plus_counter))
-
 		# Same for negatives
 		for i in sentiments_neg:
 			prt = i.split()
@@ -565,23 +535,19 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if on_sis >= len(prt) and on_sis != 0:
 					neg_counter = neg_counter + 1
-
 		f.write(',' + str(neg_counter))
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-
 		sentiment_users.append([str(users.index(s)), str(plus_counter),str(neg_counter)])
-
 	sentiment_users.sort(reverse=True, key=toisesta)
 	print( 'Users joissa eniten postitiivisia sanoja ')
 	print(sentiment_users[:5])
 	print(' users joissa eniten negatiivisia sanoja ')
 	sentiment_users.sort(reverse=True, key=kolmannesta)
 	print(sentiment_users[:5])
-
 
 def compare_documents_with_technical_voc():
 	#########################################################################
@@ -591,34 +557,27 @@ def compare_documents_with_technical_voc():
 
 	technical_vocabulary_set = set(technical_vocabulary)
 	print('Common words in reference vs. technical vocabulary in users file')
-
 	f=open( "output_intersection_with_reference_for_users_doc.csv","w")
 	f.write(' ')
 	for s in technical_vocabulary:
 		f.write(','+ s )
 	f.write(', SAME, DIFFERENT' +','+ 'Disease' +','+ 'Symptom' +','+ 'Therapy'+','+'Lifestyle'+ '\n')
-
 	user_counter=0
 	for s in users:
 		user_counter = user_counter +1
 		text_set = set(s[1].split())
 		diff_set=set(text_set.difference(technical_vocabulary_set))
 		leikkaus_set=set(text_set.intersection(technical_vocabulary_set))
-
 		f.write(s[0])
 		for sana in technical_vocabulary:
 			if( sana in list(leikkaus_set)):
 				f.write(',' + '1')
 			else:
 				f.write(','+ '0')
-
 		f.write(',' + str(len(leikkaus_set)) + ',' + str(len(diff_set)))
 		f.write(',' + str(len(dis_set.intersection(leikkaus_set))) + ',' + str(len(sym_set.intersection(leikkaus_set))) + ',' + str(len(the_set.intersection(leikkaus_set))) +','+ str(len(lif_set.intersection(leikkaus_set))) + '\n')
-
 		#print(leikkaus_set)
 		#print(str(len(dis_set.intersection(leikkaus_set))) + ',' + str(len(sym_set.intersection(leikkaus_set))) + ',' + str(len(the_set.intersection(leikkaus_set))) + ',''+ str(len(lif_set.intersection(leikkaus_set))))
-
-
 
 	#############################################################
 	# Overlapping between user documents and technical vocabulary
@@ -632,7 +591,6 @@ def compare_documents_with_technical_voc():
 	for s in technical_vocabulary:
 		f.write(','+ s )
 	f.write(', SAME, DIFFERENT' +','+ 'Disease' +','+ 'Symptom' +','+ 'Therapy'+','+'Lifestyle'+ '\n')
-
 	for s in solutions:
 		same_words = []
 		text_set = set(str(s[3]).split())
@@ -647,8 +605,11 @@ def compare_documents_with_technical_voc():
 			else:
 				f.write(',')
 				sss="0"
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 8031c4472df309e7055303d47e3635a036a88da3
 		f.write(',' + str(len(leikkaus_set)) + ',' + str(len(diff_set)))
 		same_set = set(same_words)
 		f.write(',' + str(len(dis_set.intersection(same_set))) + ',' + str(len(sym_set.intersection(same_set))) + ',' + str(len(the_set.intersection(same_set))) + ','+ str(len(lif_set.intersection(same_set))))
@@ -658,6 +619,7 @@ def compare_documents_with_technical_voc():
 
 	################################################################
 	# Overlapping between user documents with other user document
+
 	print('Then calculate intersection with all other user documents')
 	f=open( "output_document_vs_document_similarity.csv","w")
 	cfile=open( "output_document_commonality.csv","w")
@@ -665,7 +627,6 @@ def compare_documents_with_technical_voc():
 	for s in solutions:
 		f.write(','+ s[1] )
 	f.write('\n')
-
 	for s in solutions:
 		text_set = set(str(s[3]).split())
 		common_list = []
@@ -685,15 +646,17 @@ def compare_documents_with_technical_voc():
 						common_list.append(i)
 
 		f.write(',' + str(len(common_list)) + '\n')
+<<<<<<< HEAD
 		cfile.write(',' + str(len(common_list)) + '\n')
 
 
 #print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
+=======
+		#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
+>>>>>>> 8031c4472df309e7055303d47e3635a036a88da3
 
-
-if __name__ == '__main__':
-	create_vocabulary()
-	create_histograms()
-	create_sentiment_analysis()
-	compare_documents_with_technical_voc()
-
+#if __name__ == '__main__':
+#	create_vocabulary()
+#	create_histograms()
+#	create_sentiment_analysis()
+#	compare_documents_with_technical_voc()
