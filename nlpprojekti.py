@@ -645,9 +645,8 @@ def compare_documents_with_technical_voc():
 
 		cfile.write(',' + str(len(common_list)) + '\n')
 
-
-#if __name__ == '__main__':
-#	create_vocabulary()
-#	create_histograms()
-#	create_sentiment_analysis()
-#	compare_documents_with_technical_voc()
+def main():
+	create_vocabulary()
+	create_histograms()
+	create_sentiment_analysis()
+	compare_documents_with_technical_voc()
