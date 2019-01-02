@@ -605,11 +605,7 @@ def compare_documents_with_technical_voc():
 			else:
 				f.write(',')
 				sss="0"
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 8031c4472df309e7055303d47e3635a036a88da3
 		f.write(',' + str(len(leikkaus_set)) + ',' + str(len(diff_set)))
 		same_set = set(same_words)
 		f.write(',' + str(len(dis_set.intersection(same_set))) + ',' + str(len(sym_set.intersection(same_set))) + ',' + str(len(the_set.intersection(same_set))) + ','+ str(len(lif_set.intersection(same_set))))
@@ -646,14 +642,9 @@ def compare_documents_with_technical_voc():
 						common_list.append(i)
 
 		f.write(',' + str(len(common_list)) + '\n')
-<<<<<<< HEAD
+
 		cfile.write(',' + str(len(common_list)) + '\n')
 
-
-#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
-=======
-		#print('Doc:' + s[1] + ' Common: ' + str(len(set(common_list))) )
->>>>>>> 8031c4472df309e7055303d47e3635a036a88da3
 
 #if __name__ == '__main__':
 #	create_vocabulary()
