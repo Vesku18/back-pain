@@ -74,7 +74,7 @@ def pain(reader, csvfile):
         N, bins, patches = axs[0].hist(x=sorted(d), bins=[-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13], facecolor='red',
                             alpha=1.0, rwidth=0.6, align='left', weights=weights)
         my_xticks = [0,1,2,3,4,5,6,7,8,9,10,11,12] #x-axis numbering
-        plt.setp(axs[0], xticks = my_xticks, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        plt.setp(axs[0], xticks = my_xticks, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.50,0.55,0.60])
         axs[0].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
         axs[0].set_title('Users\' pain level at the moment',fontsize=14)
         axs[0].text(2.15, 0.22, '0 = no pain \n12 = maximal pain', fontsize=12)
@@ -95,7 +95,7 @@ def pain(reader, csvfile):
         N, bins, patches = axs[1].hist(x=sorted(d2), bins=[-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13], facecolor='orange',
                             alpha=1.0, rwidth=0.6, align='left', weights=weights)               
         my_xticks = [0,1,2,3] #x-axis numbering
-        plt.setp(axs[1], xticks = my_xticks, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45])
+        plt.setp(axs[1], xticks = my_xticks, yticks = [0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.50,0.55,0.60])
         axs[1].grid(axis='y', alpha=0.75, color='grey',linestyle='dashed')
         axs[1].set_title('Users\' pain experience in the past',fontsize=14)
         axs[1].text(4.25, 0.2, '0 = no \n1 = yes \n2 = not relapsed \n3 = relapsed', fontsize=12)         
