@@ -78,7 +78,7 @@ def create_vocabulary():
 	###################################
 	# Start to create vocabulary
 	###################################
-
+	tsolutions=[]
 	with open('solutions_lemmatized.csv') as csvfile:
 		reader = csv.DictReader(csvfile, ['Rivi','User', 'Otsikko', 'Sisus'])
 		admin_id=1;
@@ -86,16 +86,21 @@ def create_vocabulary():
 			#print(row['Rivi'], row['Sisus'])
 			if(row['User'] == 'admin'):
 				a=str(admin_id)
-				s='admin' + '_' + a
+				tunnus='admin' + '_' + a
 				admin_id=admin_id+1
 			else:
-				s=row['Rivi']
-			solutions.append([row['Rivi'], s, row['Otsikko'], row['Sisus']])
+				tunnus=row['Rivi']
+			tsolutions.append([row['Rivi'], tunnus, row['Otsikko'], row['Sisus']])
+			newrow = []
+			newOtsikko = ''
+			newSisus = ''
+
 			str1=str(row['Otsikko'])
-#			prt=str1.split()
+
 			prt = nltk.word_tokenize(str1)
 			for ss in prt:
 				s=strip_word(ss).lower()
+				newOtsikko += ' ' + s
 				if s not in stopwords:
 					if s not in vocabulary:
 						vocabulary.append(str(s))
@@ -106,10 +111,11 @@ def create_vocabulary():
 				else:
 					removed_words.append(s)
 			str2=str(row['Sisus'])
-			#prt=str2.split()
-			prt = nltk.word_tokenize(str1)
+
+			prt = nltk.word_tokenize(str2)
 			for ss in prt:
 				s=strip_word(ss).lower()
+				newSisus += ' '+ s
 				if s not in stopwords:
 					if s not in vocabulary:
 						vocabulary.append(str(s))
@@ -119,8 +125,12 @@ def create_vocabulary():
 						string_count[ind] = int(string_count[ind]) + 1
 				else:
 					removed_words.append(s)
-	print('Solutions file read in')
 
+			solutions.append([row['Rivi'], tunnus, newOtsikko, newSisus ])
+
+	print('Solutions file read in')
+	print(solutions)
+	print(tsolutions)
 	########################################
 	# Read users document
 	########################################

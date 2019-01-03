@@ -2,7 +2,7 @@
 NLP project 25:  Mining Citizens’ Health Opinion
 "Back-pain"
 Team: Juha Mursula, Sakari Murtovaara, Juha Paaso, Riitta Rankinen, Vesa Similä, Aapo Ylisassi
-Date: xx. xx 2019
+Date: 7. 1. 2019
 """
 
 import ikkunasto
@@ -35,7 +35,7 @@ def load_data():
     nlpprojekti.create_histograms()
     nlpprojekti.create_sentiment_analysis()
     nlpprojekti.compare_documents_with_technical_voc()
-    viesti = "Data processing ready."
+    viesti = "Data processing done."
     ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
     tila["prosessoitu"] = True
 
@@ -60,6 +60,7 @@ def term_counts():
                 if sana != '' and sana != 'None' and sana!='none' and sana !=' ' and sana != ';':
                     sanasto[sana]=int(lkm)   
             top_sanat = dict(sorted(sanasto.items(), key=operator.itemgetter(1),reverse=True) [:20])
+        print("\nTop terms in user documents")
         print(top_sanat)
 
         workbook = xlrd.open_workbook("technical_vocabulary.xlsx")
@@ -84,6 +85,7 @@ def term_counts():
             for tauti in taudit:
                 if sana == tauti:
                     tauti_histo[sana] = sanasto[sana]
+        print("\nTop diseases:")
         print(tauti_histo)
         top_taudit = dict(sorted(tauti_histo.items(), key=operator.itemgetter(1),reverse=True) [:10])
 
@@ -92,6 +94,7 @@ def term_counts():
             for oire in oireet:
                 if sana == oire:
                     oire_histo[sana] = sanasto[sana]
+        print("\nTop symptoms:")
         print(oire_histo)
         top_oireet = dict(sorted(oire_histo.items(), key=operator.itemgetter(1),reverse=True) [:10])
 
@@ -100,6 +103,7 @@ def term_counts():
             for hoito in hoidot:
                 if sana == hoito:
                     hoito_histo[sana] = sanasto[sana]
+        print("\nTop therapies:")
         print(hoito_histo)
         top_hoidot = dict(sorted(hoito_histo.items(), key=operator.itemgetter(1),reverse=True) [:10])
 
@@ -108,49 +112,49 @@ def term_counts():
             for tapa in tavat:
                 if sana == tapa:
                     tapa_histo[sana] = sanasto[sana]
+        print("\nTop life styles:")
         print(tapa_histo)
         top_tavat = dict(sorted(tapa_histo.items(), key=operator.itemgetter(1),reverse=True) [:10])
 
-        # histogram: all words   
+        # histogram: all terms
         names = list(top_sanat.keys())
         values = list(top_sanat.values())
-        fig, axs = plt.subplots()
-        plt.xticks(rotation=75)
-        axs.bar(names, values)
-        fig.suptitle('Top words')
+        fig1, axs = plt.subplots(figsize=(8,6))
+#        plt.xticks(rotation=75)
+        axs.barh(names, values)
+        fig1.suptitle('Top terms')
+        axs.invert_yaxis()
 
-        # histogram: diseases
+        # histograms: disease, symptoms, therapies, life style
+ 
+        fig2, axes = plt.subplots(nrows=2,ncols=2, figsize=(8,6))
+        ax0, ax1, ax2, ax3 = axes.flatten()
+
         names = list(top_taudit.keys())
         values = list(top_taudit.values())
-        fig, axs = plt.subplots()
-        plt.xticks(rotation=75)
-        axs.bar(names, values)
-        fig.suptitle('Top diseases')
+        ax0.barh(names, values)
+        ax0.set_title("Top diseases")
+        ax0.invert_yaxis()
 
-        # histogram: symptoms
         names = list(top_oireet.keys())
         values = list(top_oireet.values())
-        fig, axs = plt.subplots()
-        plt.xticks(rotation=75)
-        axs.bar(names, values)
-        fig.suptitle('Top symptoms')
+        ax1.barh(names, values)
+        ax1.set_title('Top symptoms')
+        ax1.invert_yaxis()
 
-        # histogram: therapy
         names = list(top_hoidot.keys())
         values = list(top_hoidot.values())
-        fig, axs = plt.subplots()
-        plt.xticks(rotation=75)
-        axs.bar(names, values)
-        fig.suptitle('Top therapies')
+        ax2.barh(names, values)
+        ax2.set_title('Top therapies')
+        ax2.invert_yaxis()
 
-       # histogram: life styles
         names = list(top_tavat.keys())
         values = list(top_tavat.values())
-        fig, axs = plt.subplots()
-        plt.xticks(rotation=75)
-        axs.bar(names, values)
-        fig.suptitle('Top life styles')
+        ax3.barh(names, values)
+        ax3.set_title('Top life styles')
+        ax3.invert_yaxis()
 
+        fig2.tight_layout()
         plt.show()
 
     else:
@@ -158,6 +162,9 @@ def term_counts():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
 
 def tech_term_counts(): 
+    """
+    Histograms of technical vocabulary
+    """
     if tila["prosessoitu"] == True:
         histograms_tech_vocabulary.Disease()
         histograms_tech_vocabulary.Symptoms()
@@ -168,10 +175,64 @@ def tech_term_counts():
         viesti = "Process data first!"
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
 
-def tee_jotain():
-    pass
+def sentiment_pie_solutions():
+	"""
+	Pie chart for "solutions.csv", where the slices will be ordered and plotted:
+	"""
+	with open("temp_sentiment_of_solutions.csv") as csvfile:
+		reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
+		print()
+		print(' Plottig solutions.csv sentiment: ')
+		for row in reader:
+			print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
+			if row['Sentiment'] == 'Positive':
+				senti_document_pos = str(row['Count'])
+			if row['Sentiment'] == 'Negative':
+					senti_document_neg = str(row['Count'])
+			else:
+				senti_document_neut = str(row['Count'])
+	
+	labels = ['Positive documents', 'Negative documents', 'Neutral documents']
+	sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
+	colors =['lightgreen', 'red', 'lightgrey']
+	explode = [0.1, 0.1, 0]
+	fig1, ax1 = plt.subplots()
+	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
+	ax1.set_title('solutions.csv', fontsize=14)
+	plt.tight_layout()
+	plt.show()
+	
+def sentiment_pie_users():
+	"""
+	Pie chart for "users.csv", where the slices will be ordered and plotted:
+	"""
+	with open("temp_sentiment_of_users.csv") as csvfile:
+		reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
+		print()
+		print(' Plotting users.csv sentiment: ')
+		for row in reader:
+			print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
+			if row['Sentiment'] == 'Positive':
+				senti_document_pos = str(row['Count'])
+			if row['Sentiment'] == 'Negative':
+					senti_document_neg = str(row['Count'])
+			else:
+				senti_document_neut = str(row['Count'])
+	
+	labels = ['Positive documents', 'Negative documents', 'Neutral documents']
+	sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
+	colors =['lightgreen', 'red', 'lightgrey']
+	explode = [0.1, 0.1, 0]
+	fig1, ax1 = plt.subplots()
+	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
+	ax1.set_title('users.csv', fontsize=14)
+	plt.tight_layout()
+	plt.show()
 
 def age_data():
+    """
+    Statistic of age data
+    """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)  
@@ -184,6 +245,9 @@ def age_data():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)        
     
 def correlation():
+    """
+    Calculating correlations of user data
+    """
     if tila["prosessoitu"] == True:   
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)  
@@ -193,6 +257,9 @@ def correlation():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)                   
 
 def gender_data():
+    """
+    Statistic of gender data
+    """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)
@@ -205,6 +272,9 @@ def gender_data():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)    
 
 def pain_data():
+    """
+    Statistic of pain data
+    """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)
@@ -215,6 +285,9 @@ def pain_data():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)  
  
 def job_data():
+    """
+    Statistic of job situation
+    """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
                 reader = csv.DictReader(csvfile)  
@@ -225,6 +298,9 @@ def job_data():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)   
 
 def close_plots():
+    """
+    Closing all plots
+    """
     if tila["prosessoitu"] == True:
         plt.close('all')
     else:
@@ -232,9 +308,16 @@ def close_plots():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)  
 
 def quit_program():
+    """
+    Exiting program
+    """
     close_plots()
     ikkunasto.lopeta()
  
+def tee_jotain():
+    """ poistetaan kunhan kaikki käsittelijäfunktiot on valmiita"""
+    pass
+
 def main():
     """
     Create GUI
@@ -246,10 +329,10 @@ def main():
     ikkunasto.luo_tekstirivi(nappikehys, "Word counts")
     ikkunasto.luo_nappi(nappikehys, "Term counts", term_counts)
     ikkunasto.luo_nappi(nappikehys, "Document overlapping", tee_jotain)
-    ikkunasto.luo_nappi(nappikehys, "Tech term counts", tech_term_counts)
+    ikkunasto.luo_nappi(nappikehys, "Technical term counts", tech_term_counts)
     ikkunasto.luo_tekstirivi(nappikehys, "Sentiment analysis")
-    ikkunasto.luo_nappi(nappikehys, "SA1", tee_jotain)
-    ikkunasto.luo_nappi(nappikehys, "SA2", tee_jotain)
+    ikkunasto.luo_nappi(nappikehys, "for Document solutions", sentiment_pie_solutions)
+    ikkunasto.luo_nappi(nappikehys, "for Documnet users", sentiment_pie_users)
     ikkunasto.luo_tekstirivi(nappikehys, "Term-document matrix")
     ikkunasto.luo_nappi(nappikehys, "TDM1", tee_jotain)
     ikkunasto.luo_nappi(nappikehys, "TDM2", tee_jotain)
@@ -263,7 +346,7 @@ def main():
     ikkunasto.luo_nappi(nappikehys, "Close plots", close_plots)
     ikkunasto.luo_nappi(nappikehys, "Quit", quit_program)
     tila["laatikko"] = ikkunasto.luo_tekstilaatikko(nappikehys, 30, 15)
-    viesti = "Load and process data first.\nNotice that data processing\ntakes a minute."
+    viesti = "Source files:\n users.csv, solutions.csv\nLoad and process data first.\nNotice that data processing\ntakes a minute."
     ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
     ikkunasto.kaynnista()
 
