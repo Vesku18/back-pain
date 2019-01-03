@@ -120,7 +120,6 @@ def term_counts():
         names = list(top_sanat.keys())
         values = list(top_sanat.values())
         fig1, axs = plt.subplots(figsize=(8,6))
-#        plt.xticks(rotation=75)
         axs.barh(names, values)
         fig1.suptitle('Top terms')
         axs.invert_yaxis()
@@ -176,62 +175,69 @@ def tech_term_counts():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
 
 def sentiment_pie_solutions():
-	"""
-	Pie chart for "solutions.csv", where the slices will be ordered and plotted:
-	"""
-	with open("temp_sentiment_of_solutions.csv") as csvfile:
-		reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
-		print()
-		print(' Plottig solutions.csv sentiment: ')
-		for row in reader:
-			print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
-			if row['Sentiment'] == 'Positive':
-				senti_document_pos = str(row['Count'])
-			if row['Sentiment'] == 'Negative':
-					senti_document_neg = str(row['Count'])
-			else:
-				senti_document_neut = str(row['Count'])
-	
-	labels = ['Positive documents', 'Negative documents', 'Neutral documents']
-	sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
-	colors =['lightgreen', 'red', 'lightgrey']
-	explode = [0.1, 0.1, 0]
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
-	ax1.set_title('solutions.csv', fontsize=14)
-	plt.tight_layout()
-	plt.show()
-	
+    """
+    Pie chart for "solutions.csv", where the slices will be ordered and plotted
+    """
+    if tila["prosessoitu"] == True:
+        with open("temp_sentiment_of_solutions.csv") as csvfile:
+            reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
+            print()
+            print(' Plotting solutions.csv sentiment: ')
+            for row in reader:
+                print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
+                if row['Sentiment'] == 'Positive':
+                    senti_document_pos = str(row['Count'])
+                if row['Sentiment'] == 'Negative':
+                    senti_document_neg = str(row['Count'])
+                else:
+                    senti_document_neut = str(row['Count'])
+        labels = ['Positive documents', 'Negative documents', 'Neutral documents']
+        sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
+        colors =['lightgreen', 'red', 'lightgrey']
+        explode = [0.1, 0.1, 0]
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
+        ax1.set_title('solutions.csv', fontsize=14)
+        plt.tight_layout()
+        plt.show()
+    else:
+        viesti = "Process data first!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
+
 def sentiment_pie_users():
-	"""
-	Pie chart for "users.csv", where the slices will be ordered and plotted:
-	"""
-	with open("temp_sentiment_of_users.csv") as csvfile:
-		reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
-		print()
-		print(' Plotting users.csv sentiment: ')
-		for row in reader:
-			print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
-			if row['Sentiment'] == 'Positive':
-				senti_document_pos = str(row['Count'])
-			if row['Sentiment'] == 'Negative':
-					senti_document_neg = str(row['Count'])
-			else:
-				senti_document_neut = str(row['Count'])
-	
-	labels = ['Positive documents', 'Negative documents', 'Neutral documents']
-	sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
-	colors =['lightgreen', 'red', 'lightgrey']
-	explode = [0.1, 0.1, 0]
-	fig1, ax1 = plt.subplots()
-	ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
-	ax1.set_title('users.csv', fontsize=14)
-	plt.tight_layout()
-	plt.show()
+    """
+    Pie chart for "users.csv", where the slices will be ordered and plotted
+    """
+    if tila["prosessoitu"] == True:
+        with open("temp_sentiment_of_users.csv") as csvfile:
+            reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
+            print()
+            print(' Plotting users.csv sentiment: ')
+            for row in reader:
+                print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
+                if row['Sentiment'] == 'Positive':
+                    senti_document_pos = str(row['Count'])
+                if row['Sentiment'] == 'Negative':
+                    senti_document_neg = str(row['Count'])
+                else:
+                    senti_document_neut = str(row['Count'])
+        labels = ['Positive documents', 'Negative documents', 'Neutral documents']
+        sizes = [senti_document_pos, senti_document_neg, senti_document_neut]
+        colors =['lightgreen', 'red', 'lightgrey']
+        explode = [0.1, 0.1, 0]
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', colors=colors, shadow=False, startangle=90)
+        ax1.set_title('users.csv', fontsize=14)
+        plt.tight_layout()
+        plt.show()
+    else:
+        viesti = "Process data first!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
+    pass
 
 def age_data():
     """
-    Statistic of age data
+    Statistics of age data
     """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
@@ -258,7 +264,7 @@ def correlation():
 
 def gender_data():
     """
-    Statistic of gender data
+    Statistics of gender data
     """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
@@ -273,7 +279,7 @@ def gender_data():
 
 def pain_data():
     """
-    Statistic of pain data
+    Statistics of pain data
     """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
@@ -286,7 +292,7 @@ def pain_data():
  
 def job_data():
     """
-    Statistic of job situation
+    Statistics of job situation
     """
     if tila["prosessoitu"] == True:
         with open('users.csv') as csvfile:
