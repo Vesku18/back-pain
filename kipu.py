@@ -26,6 +26,9 @@ tila = {
     "prosessoitu": False,
 }
 
+def toisesta(r):
+	return int(r[1])
+
 def load_data():
     """
     Load and process data
@@ -248,6 +251,16 @@ def document_overlapping(): # TÄSTÄ löhtee
             for row in reader:
                 words.append(row['Number of words'])
                 common_words.append(row['Number of common words with other documents'])
+
+        lista = []
+        for s in words:
+            lista.append([s, common_words[words.index(s)]])
+        lista.sort(reverse=False, key=toisesta)
+        words = []
+        common_words = []
+        for s in lista:
+            words.append(s[0])
+            common_words.append(s[1])
 
         # Data for plotting
         t = np.arange(0, len(words), 1)

@@ -30,6 +30,19 @@ lifestyle = []
 lif_set = set()
 lifestyle_sh = []
 
+
+def toisesta(r):
+	return int(r[1])
+
+
+def kolmannesta(r):
+	return int(r[2])
+
+
+def neljannesta(r):
+	return int(r[3])  # Documents overall sentiment calculation
+
+
 def strip_word(s):
 	return s.strip(' ,.+-()\/"')
 
@@ -259,6 +272,7 @@ def create_vocabulary():
 	for s in removed_words:
 		f.write(s + ',')
 	print('Removed words list created')
+	f.close()
 
 def create_histograms():
 	######################################################
@@ -445,12 +459,6 @@ def create_sentiment_analysis():
 	print('Positivness versus negativness in solution docuemnts')
 	sentiment_solutions=[]
 	sentiment_users=[]
-	def toisesta(r):
-		return int(r[1])
-	def kolmannesta(r):
-		return int(r[2])
-	def neljannesta(r):
-		return int(r[3])  # Documents overall sentiment calculation
 
 	senti_document_pos = 0
 	senti_document_neg = 0
@@ -531,6 +539,8 @@ def create_sentiment_analysis():
 	print('   Negative sentiment documents: ', senti_document_neg)  # in users.csv
 	print('   Neutral  sentiment documents: ', senti_document_neut)  # in users.csv
 	print()
+	f.close()
+
 
 	file = open("output_sentiment_of_solutions.csv", "w")  # For plotting pies
 	file.write('Positive' + ',' + str(senti_document_pos) + '\n')
@@ -548,6 +558,7 @@ def create_sentiment_analysis():
 		print(neg)
 		print('+n' + 'Tulos: Doc ' + s[1] + ' Positive: ' + str(plus_counter) + ', Negative: ' + str(neg_counter) + '\n')
 	'''
+	f.close()
 
 	########################################################
 	# Sentiment analysis for users document
@@ -633,11 +644,13 @@ def create_sentiment_analysis():
 	print('   Negative sentiment documents: ', senti_document_u_neg)
 	print('   Neutral  sentiment documents: ', senti_document_u_neut)
 	print()
+	f.close()
 
 	file=open( "output_sentiment_of_users.csv","w")
 	file.write('Positive' + ',' + str(senti_document_u_pos) + '\n')
 	file.write('Negative' + ',' + str(senti_document_u_neg) + '\n')
 	file.write('Neutral ' + ',' + str(senti_document_u_neut) + '\n')
+	f.close()
 
 def compare_documents_with_technical_voc():
 	#########################################################################
@@ -703,6 +716,7 @@ def compare_documents_with_technical_voc():
 			f.write(', ' + str(p) + ' ' )
 		f.write('\n')
 
+	f.close()
 	################################################################
 	# Overlapping between user documents with other user document
 
@@ -739,7 +753,19 @@ def compare_documents_with_technical_voc():
 		cfile.write(',' + str(len(common_list)) + '\n')
 		common_words.append(str(len(common_list)))
 
-"""	import matplotlib
+	f.close()
+"""
+	lista = []
+	for s in words:
+		lista.append([s, common_words[words.index(s)]])
+	lista.sort(reverse = False, key = toisesta )
+	words=[]
+	common_words = []
+	for s in lista:
+		words.append(s[0])
+		common_words.append(s[1])
+
+	import matplotlib
 	import matplotlib.pyplot as plt
 	import numpy as np
 
@@ -747,17 +773,24 @@ def compare_documents_with_technical_voc():
 	print(common_words)
 
 	# Data for plotting
-	t = np.arange(0, len(words),1)
+#	t = np.arange(0,len(words),1)
+	t= np.arange(len(words))
 	s = words
 
+	plt.figure()
 	fig, ax = plt.subplots()
-	ax.plot(t, s, 'b')
-	ax.plot(t, common_words, 'k')
-	ax.set(xlabel='Documents', ylabel='Number of words',
-		   title='Common words in documents, sorted by number of common words')
-	ax.grid()
+	ax.plot(t, words, 'b' , t, common_words, 'k')
 
-	fig.savefig("test.png")
+
+
+#	line2 = plt.plot(np.array(common_words))
+#	line1 = plt.plot(np.array(words))
+
+	#	ax.set(xlabel='Documents', ylabel='Number of words',
+#		   title='Common words in documents, sorted by number of common words')
+#	ax.grid()
+
+#	fig.savefig("test.png")
 	plt.show()
 """
 
