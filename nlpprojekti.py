@@ -449,6 +449,13 @@ def create_sentiment_analysis():
 		return int(r[1])
 	def kolmannesta(r):
 		return int(r[2])
+	def neljannesta(r):
+		return int(r[3])  # Documents overall sentiment calculation
+
+	senti_document_pos = 0
+	senti_document_neg = 0
+	senti_document_neut = 0
+
 	f=open( "output_sentiment_analysis_documents.csv","w")
 	f.write('Document, positive, negative ' + '\n')
 	for s in solutions:
@@ -459,6 +466,7 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
+		senti_counter = 0
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
@@ -482,19 +490,53 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if (on_sis >= len(prt)) and (on_sis > 0):
 					neg_counter = neg_counter + 1
+
+		senti_counter = plus_counter - neg_counter  # Document is eiter positive or negative or neutral
+
 		f.write(',' + str(neg_counter))
+		f.write(',')
+		f.write(str(senti_counter))
+
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-		sentiment_solutions.append([str(solutions.index(s)), str(plus_counter),str(neg_counter)])
+
+		if solutions.index(s) > 1:  # 1st header line out of calculation
+			if senti_counter > 0:  # Added one more positive document
+				senti_document_pos = senti_document_pos + 1
+			elif senti_counter < 0:  # Added one more negative document
+				senti_document_neg = senti_document_neg + 1
+			else:  # Added one more neutral document
+				senti_document_neut = senti_document_neut + 1
+
+		sentiment_solutions.append([str(solutions.index(s)), str(plus_counter), str(neg_counter), str(senti_counter)])
+
 	sentiment_solutions.sort(reverse=True, key=toisesta )
 	print('Dokumnetit joissa eninten positiivisia sanoja ')
 	print(sentiment_solutions[:5])
 	sentiment_solutions.sort(reverse=True, key=kolmannesta )
 	print(' Dokumnetit joissa eniten negatiiivisia sanoja ')
 	print(sentiment_solutions[:5])
+
+	print(' Dokumentit 10 kpl jotka eniten positiivisia ')
+	sentiment_solutions.sort(reverse=True, key=neljannesta)
+	print(sentiment_solutions[:10])
+	print(' Dokumentit 10 kpl jotka eniten negatiiivisia ')
+	sentiment_solutions.sort(reverse=False, key=neljannesta)
+	print(sentiment_solutions[:10])
+
+	print('   Positive sentiment documents: ', senti_document_pos)  # in users.csv
+	print('   Negative sentiment documents: ', senti_document_neg)  # in users.csv
+	print('   Neutral  sentiment documents: ', senti_document_neut)  # in users.csv
+	print()
+
+	file = open("output_sentiment_of_solutions.csv", "w")  # For plotting pies
+	file.write('Positive' + ',' + str(senti_document_pos) + '\n')
+	file.write('Negative' + ',' + str(senti_document_neg) + '\n')
+	file.write('Neutral ' + ',' + str(senti_document_neut) + '\n')
+
 	'''	print('Näistä pos sanoja etitään' )
 		print(text_list)
 		print('\n')
@@ -513,6 +555,11 @@ def create_sentiment_analysis():
 	print('Positivness versus negativness in user docuemnts')
 	f=open( "output_sentiment_analysis_userdoc.csv","w")
 	f.write('Document, positive, negative ' + '\n')
+
+	senti_document_u_pos = 0
+	senti_document_u_neg = 0
+	senti_document_u_neut = 0
+
 	for s in users:
 		f.write(s[0])
 		text_list = s[1].split()
@@ -521,6 +568,7 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
+		senti_counter =0
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
@@ -544,19 +592,52 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if on_sis >= len(prt) and on_sis != 0:
 					neg_counter = neg_counter + 1
+
+		senti_counter = plus_counter - neg_counter  # Document is eiter positive or negative or neutral
+
 		f.write(',' + str(neg_counter))
+		f.write(',')
+		f.write(str(senti_counter))
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-		sentiment_users.append([str(users.index(s)), str(plus_counter),str(neg_counter)])
+		if users.index(s) > 1:
+			if senti_counter > 0:
+				senti_document_u_pos = senti_document_u_pos + 1
+			elif senti_counter < 0:
+				senti_document_u_neg = senti_document_u_neg + 1
+			else:
+				senti_document_u_neut = senti_document_u_neut + 1
+
+		sentiment_users.append([str(users.index(s)), str(plus_counter), str(neg_counter), str(senti_counter)])
+
 	sentiment_users.sort(reverse=True, key=toisesta)
 	print( 'Users joissa eniten postitiivisia sanoja ')
 	print(sentiment_users[:5])
 	print(' users joissa eniten negatiivisia sanoja ')
 	sentiment_users.sort(reverse=True, key=kolmannesta)
 	print(sentiment_users[:5])
+
+	print()
+	print(' Users 10 kpl jotka eniten positiivisia ')
+	sentiment_users.sort(reverse=True, key=neljannesta )
+	print(sentiment_users[:10])
+
+	print(' Users 10 kpl jotka eniten negatiiivisia ')
+	sentiment_users.sort(reverse=False, key=neljannesta )
+	print(sentiment_users[:10])
+
+	print('   Positive sentiment documents: ', senti_document_u_pos)
+	print('   Negative sentiment documents: ', senti_document_u_neg)
+	print('   Neutral  sentiment documents: ', senti_document_u_neut)
+	print()
+
+	file=open( "output_sentiment_of_users.csv","w")
+	file.write('Positive' + ',' + str(senti_document_u_pos) + '\n')
+	file.write('Negative' + ',' + str(senti_document_u_neg) + '\n')
+	file.write('Neutral ' + ',' + str(senti_document_u_neut) + '\n')
 
 def compare_documents_with_technical_voc():
 	#########################################################################

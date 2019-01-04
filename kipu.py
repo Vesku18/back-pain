@@ -179,7 +179,7 @@ def sentiment_pie_solutions():
     Pie chart for "solutions.csv", where the slices will be ordered and plotted
     """
     if tila["prosessoitu"] == True:
-        with open("temp_sentiment_of_solutions.csv") as csvfile:
+        with open("output_sentiment_of_solutions.csv") as csvfile:
             reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
             print()
             print(' Plotting solutions.csv sentiment: ')
@@ -209,7 +209,7 @@ def sentiment_pie_users():
     Pie chart for "users.csv", where the slices will be ordered and plotted
     """
     if tila["prosessoitu"] == True:
-        with open("temp_sentiment_of_users.csv") as csvfile:
+        with open("output_sentiment_of_users.csv") as csvfile:
             reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
             print()
             print(' Plotting users.csv sentiment: ')
