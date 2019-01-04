@@ -30,7 +30,7 @@ def load_data():
     """
     Load and process data
     """
-    nlpprojekti.lemmatize_files()
+#    nlpprojekti.lemmatize_files()
     nlpprojekti.create_vocabulary()
     nlpprojekti.create_histograms()
     nlpprojekti.create_sentiment_analysis()
@@ -235,6 +235,39 @@ def sentiment_pie_users():
         ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
     pass
 
+def document_overlapping(): # TÄSTÄ löhtee
+    #        import matplotlib
+    #        import matplotlib.pyplot as plt
+    #        import numpy as np
+
+    words = []
+    common_words = []
+    if tila["prosessoitu"] == True:
+        with open("output_document_commonality.csv") as csvfile:
+            reader = csv.DictReader(csvfile, ['Id', 'Number of words', 'Number of common words with other documents'])
+            for row in reader:
+                words.append(row['Number of words'])
+                common_words.append(row['Number of common words with other documents'])
+
+        # Data for plotting
+        t = np.arange(0, len(words), 1)
+        s = words
+
+        fig, ax = plt.subplots()
+        ax.plot(t, words, 'b')
+        ax.plot(t, common_words, 'k')
+        ax.set(xlabel='Documents', ylabel='Number of words',
+               title='Common words in documents, sorted by number of common words')
+        ax.grid()
+
+        fig.savefig("test.png")
+        plt.show()
+
+    else:
+        viesti = "Process data first!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)
+    pass
+
 def age_data():
     """
     Statistics of age data
@@ -334,7 +367,7 @@ def main():
     ikkunasto.luo_nappi(nappikehys, "Load and process data", load_data)
     ikkunasto.luo_tekstirivi(nappikehys, "Word counts")
     ikkunasto.luo_nappi(nappikehys, "Term counts", term_counts)
-    ikkunasto.luo_nappi(nappikehys, "Document overlapping", tee_jotain)
+    ikkunasto.luo_nappi(nappikehys, "Document overlapping", document_overlapping)
     ikkunasto.luo_nappi(nappikehys, "Technical term counts", tech_term_counts)
     ikkunasto.luo_tekstirivi(nappikehys, "Sentiment analysis")
     ikkunasto.luo_nappi(nappikehys, "for Document solutions", sentiment_pie_solutions)

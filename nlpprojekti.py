@@ -129,8 +129,7 @@ def create_vocabulary():
 			solutions.append([row['Rivi'], tunnus, newOtsikko, newSisus ])
 
 	print('Solutions file read in')
-	print(solutions)
-	print(tsolutions)
+
 	########################################
 	# Read users document
 	########################################
@@ -626,6 +625,9 @@ def compare_documents_with_technical_voc():
 	################################################################
 	# Overlapping between user documents with other user document
 
+	words = []
+	common_words =[]
+
 	print('Then calculate intersection with all other user documents')
 	f=open( "output_document_vs_document_similarity.csv","w")
 	cfile=open( "output_document_commonality.csv","w")
@@ -645,7 +647,7 @@ def compare_documents_with_technical_voc():
 			f.write(',' + str(len(leikkaus_set)))
 			if (s == d):
 				cfile.write(',' + str(len(leikkaus_set)))
-
+				words.append(str(len(leikkaus_set)))
 			for i in leikkaus_set:
 				if(s != d): # Decline diagonal, comparison against itself
 					if i not in common_list:
@@ -654,9 +656,33 @@ def compare_documents_with_technical_voc():
 		f.write(',' + str(len(common_list)) + '\n')
 
 		cfile.write(',' + str(len(common_list)) + '\n')
+		common_words.append(str(len(common_list)))
+
+"""	import matplotlib
+	import matplotlib.pyplot as plt
+	import numpy as np
+
+	print(words)
+	print(common_words)
+
+	# Data for plotting
+	t = np.arange(0, len(words),1)
+	s = words
+
+	fig, ax = plt.subplots()
+	ax.plot(t, s, 'b')
+	ax.plot(t, common_words, 'k')
+	ax.set(xlabel='Documents', ylabel='Number of words',
+		   title='Common words in documents, sorted by number of common words')
+	ax.grid()
+
+	fig.savefig("test.png")
+	plt.show()
+"""
 
 def main():
 	create_vocabulary()
 	create_histograms()
 	create_sentiment_analysis()
 	compare_documents_with_technical_voc()
+
