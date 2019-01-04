@@ -8,6 +8,7 @@ df = pd.read_excel('technical_vocabulary.xlsx', sheet_name = 'vocabulary-1')
 
 def Disease():
     fig = plt.figure()
+    fig.set_size_inches(11,7)
     ay=sns.countplot(y='disease_class', data=df, color='C0', order = df['disease_class'].value_counts().index)
     ay.set_ylabel('')
     ay.set_xlabel('Count by classes', fontsize=12)    
@@ -17,6 +18,7 @@ def Disease():
 
 def Symptoms():
     fig = plt.figure()
+    fig.set_size_inches(14,8)
     ay=sns.countplot(y='symptom_class', data=df, color='C0', order = df['symptom_class'].value_counts().index)
     ay.set_ylabel('')
     ay.set_xlabel('Count by classes', fontsize=12)
@@ -25,7 +27,8 @@ def Symptoms():
     plt.savefig("Symptoms_count.png")
 
 def Therapy():
-    fig = plt.figure()
+    fig = plt.figure()     
+    fig.set_size_inches(10,6)
     ay=sns.countplot(y='therapy_class', data=df, color='C0', order = df['therapy_class'].value_counts().index)
     ay.set_ylabel('')
     ay.set_xlabel('Count by classes', fontsize=12)
@@ -34,7 +37,8 @@ def Therapy():
     plt.savefig("Therapy_count.png")
 
 def life_style():
-    fig = plt.figure()
+    fig = plt.figure()     
+    fig.set_size_inches(8,6)
     ay=sns.countplot(y='life style_class', data=df, color='C0', order = df['life style_class'].value_counts().index)
     ay.set_ylabel('')
     ay.set_xlabel('Count by classes', fontsize=12)    
