@@ -30,6 +30,19 @@ lifestyle = []
 lif_set = set()
 lifestyle_sh = []
 
+
+def toisesta(r):
+	return int(r[1])
+
+
+def kolmannesta(r):
+	return int(r[2])
+
+
+def neljannesta(r):
+	return int(r[3])  # Documents overall sentiment calculation
+
+
 def strip_word(s):
 	return s.strip(' ,.+-()\/"')
 
@@ -129,8 +142,7 @@ def create_vocabulary():
 			solutions.append([row['Rivi'], tunnus, newOtsikko, newSisus ])
 
 	print('Solutions file read in')
-	print(solutions)
-	print(tsolutions)
+
 	########################################
 	# Read users document
 	########################################
@@ -260,6 +272,7 @@ def create_vocabulary():
 	for s in removed_words:
 		f.write(s + ',')
 	print('Removed words list created')
+	f.close()
 
 def create_histograms():
 	######################################################
@@ -446,10 +459,11 @@ def create_sentiment_analysis():
 	print('Positivness versus negativness in solution docuemnts')
 	sentiment_solutions=[]
 	sentiment_users=[]
-	def toisesta(r):
-		return int(r[1])
-	def kolmannesta(r):
-		return int(r[2])
+
+	senti_document_pos = 0
+	senti_document_neg = 0
+	senti_document_neut = 0
+
 	f=open( "output_sentiment_analysis_documents.csv","w")
 	f.write('Document, positive, negative ' + '\n')
 	for s in solutions:
@@ -460,6 +474,7 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
+		senti_counter = 0
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
@@ -483,19 +498,55 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if (on_sis >= len(prt)) and (on_sis > 0):
 					neg_counter = neg_counter + 1
+
+		senti_counter = plus_counter - neg_counter  # Document is eiter positive or negative or neutral
+
 		f.write(',' + str(neg_counter))
+		f.write(',')
+		f.write(str(senti_counter))
+
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-		sentiment_solutions.append([str(solutions.index(s)), str(plus_counter),str(neg_counter)])
+
+		if solutions.index(s) > 1:  # 1st header line out of calculation
+			if senti_counter > 0:  # Added one more positive document
+				senti_document_pos = senti_document_pos + 1
+			elif senti_counter < 0:  # Added one more negative document
+				senti_document_neg = senti_document_neg + 1
+			else:  # Added one more neutral document
+				senti_document_neut = senti_document_neut + 1
+
+		sentiment_solutions.append([str(solutions.index(s)), str(plus_counter), str(neg_counter), str(senti_counter)])
+
 	sentiment_solutions.sort(reverse=True, key=toisesta )
 	print('Dokumnetit joissa eninten positiivisia sanoja ')
 	print(sentiment_solutions[:5])
 	sentiment_solutions.sort(reverse=True, key=kolmannesta )
 	print(' Dokumnetit joissa eniten negatiiivisia sanoja ')
 	print(sentiment_solutions[:5])
+
+	print(' Dokumentit 10 kpl jotka eniten positiivisia ')
+	sentiment_solutions.sort(reverse=True, key=neljannesta)
+	print(sentiment_solutions[:10])
+	print(' Dokumentit 10 kpl jotka eniten negatiiivisia ')
+	sentiment_solutions.sort(reverse=False, key=neljannesta)
+	print(sentiment_solutions[:10])
+
+	print('   Positive sentiment documents: ', senti_document_pos)  # in users.csv
+	print('   Negative sentiment documents: ', senti_document_neg)  # in users.csv
+	print('   Neutral  sentiment documents: ', senti_document_neut)  # in users.csv
+	print()
+	f.close()
+
+
+	file = open("output_sentiment_of_solutions.csv", "w")  # For plotting pies
+	file.write('Positive' + ',' + str(senti_document_pos) + '\n')
+	file.write('Negative' + ',' + str(senti_document_neg) + '\n')
+	file.write('Neutral ' + ',' + str(senti_document_neut) + '\n')
+
 	'''	print('Näistä pos sanoja etitään' )
 		print(text_list)
 		print('\n')
@@ -507,6 +558,7 @@ def create_sentiment_analysis():
 		print(neg)
 		print('+n' + 'Tulos: Doc ' + s[1] + ' Positive: ' + str(plus_counter) + ', Negative: ' + str(neg_counter) + '\n')
 	'''
+	f.close()
 
 	########################################################
 	# Sentiment analysis for users document
@@ -514,6 +566,11 @@ def create_sentiment_analysis():
 	print('Positivness versus negativness in user docuemnts')
 	f=open( "output_sentiment_analysis_userdoc.csv","w")
 	f.write('Document, positive, negative ' + '\n')
+
+	senti_document_u_pos = 0
+	senti_document_u_neg = 0
+	senti_document_u_neut = 0
+
 	for s in users:
 		f.write(s[0])
 		text_list = s[1].split()
@@ -522,6 +579,7 @@ def create_sentiment_analysis():
 		neg_counter=0
 		plus=[]
 		neg=[]
+		senti_counter =0
 		# if all words in positive sentiment definition row are included, then doc gets postiive tic
 		for i in sentiments_pos:
 			prt=i.split()
@@ -545,19 +603,54 @@ def create_sentiment_analysis():
 						neg.append(p + ' löytyi sanasta ' + r)
 			if on_sis >= len(prt) and on_sis != 0:
 					neg_counter = neg_counter + 1
+
+		senti_counter = plus_counter - neg_counter  # Document is eiter positive or negative or neutral
+
 		f.write(',' + str(neg_counter))
+		f.write(',')
+		f.write(str(senti_counter))
 		f.write(',')
 		f.write(str(plus))
 		f.write(',')
 		f.write(str(neg))
 		f.write('\n')
-		sentiment_users.append([str(users.index(s)), str(plus_counter),str(neg_counter)])
+		if users.index(s) > 1:
+			if senti_counter > 0:
+				senti_document_u_pos = senti_document_u_pos + 1
+			elif senti_counter < 0:
+				senti_document_u_neg = senti_document_u_neg + 1
+			else:
+				senti_document_u_neut = senti_document_u_neut + 1
+
+		sentiment_users.append([str(users.index(s)), str(plus_counter), str(neg_counter), str(senti_counter)])
+
 	sentiment_users.sort(reverse=True, key=toisesta)
 	print( 'Users joissa eniten postitiivisia sanoja ')
 	print(sentiment_users[:5])
 	print(' users joissa eniten negatiivisia sanoja ')
 	sentiment_users.sort(reverse=True, key=kolmannesta)
 	print(sentiment_users[:5])
+
+	print()
+	print(' Users 10 kpl jotka eniten positiivisia ')
+	sentiment_users.sort(reverse=True, key=neljannesta )
+	print(sentiment_users[:10])
+
+	print(' Users 10 kpl jotka eniten negatiiivisia ')
+	sentiment_users.sort(reverse=False, key=neljannesta )
+	print(sentiment_users[:10])
+
+	print('   Positive sentiment documents: ', senti_document_u_pos)
+	print('   Negative sentiment documents: ', senti_document_u_neg)
+	print('   Neutral  sentiment documents: ', senti_document_u_neut)
+	print()
+	f.close()
+
+	file=open( "output_sentiment_of_users.csv","w")
+	file.write('Positive' + ',' + str(senti_document_u_pos) + '\n')
+	file.write('Negative' + ',' + str(senti_document_u_neg) + '\n')
+	file.write('Neutral ' + ',' + str(senti_document_u_neut) + '\n')
+	f.close()
 
 def compare_documents_with_technical_voc():
 	#########################################################################
@@ -623,8 +716,12 @@ def compare_documents_with_technical_voc():
 			f.write(', ' + str(p) + ' ' )
 		f.write('\n')
 
+	f.close()
 	################################################################
 	# Overlapping between user documents with other user document
+
+	words = []
+	common_words =[]
 
 	print('Then calculate intersection with all other user documents')
 	f=open( "output_document_vs_document_similarity.csv","w")
@@ -645,7 +742,7 @@ def compare_documents_with_technical_voc():
 			f.write(',' + str(len(leikkaus_set)))
 			if (s == d):
 				cfile.write(',' + str(len(leikkaus_set)))
-
+				words.append(str(len(leikkaus_set)))
 			for i in leikkaus_set:
 				if(s != d): # Decline diagonal, comparison against itself
 					if i not in common_list:
@@ -654,9 +751,52 @@ def compare_documents_with_technical_voc():
 		f.write(',' + str(len(common_list)) + '\n')
 
 		cfile.write(',' + str(len(common_list)) + '\n')
+		common_words.append(str(len(common_list)))
+
+	f.close()
+"""
+	lista = []
+	for s in words:
+		lista.append([s, common_words[words.index(s)]])
+	lista.sort(reverse = False, key = toisesta )
+	words=[]
+	common_words = []
+	for s in lista:
+		words.append(s[0])
+		common_words.append(s[1])
+
+	import matplotlib
+	import matplotlib.pyplot as plt
+	import numpy as np
+
+	print(words)
+	print(common_words)
+
+	# Data for plotting
+#	t = np.arange(0,len(words),1)
+	t= np.arange(len(words))
+	s = words
+
+	plt.figure()
+	fig, ax = plt.subplots()
+	ax.plot(t, words, 'b' , t, common_words, 'k')
+
+
+
+#	line2 = plt.plot(np.array(common_words))
+#	line1 = plt.plot(np.array(words))
+
+	#	ax.set(xlabel='Documents', ylabel='Number of words',
+#		   title='Common words in documents, sorted by number of common words')
+#	ax.grid()
+
+#	fig.savefig("test.png")
+	plt.show()
+"""
 
 def main():
 	create_vocabulary()
 	create_histograms()
 	create_sentiment_analysis()
 	compare_documents_with_technical_voc()
+
