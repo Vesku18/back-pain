@@ -263,12 +263,15 @@ def document_overlapping(): # TÄSTÄ löhtee
             common_words.append(s[1])
 
         # Data for plotting
-        t = np.arange(0, len(words), 1)
-        s = words
+        for i in common_words:
+            common_words[common_words.index(i)] = int(i)
+        for i in words:
+            words[words.index(i)] = int(i)
+        fig = plt.figure()
+        ax = plt.subplot(111)
+        line2 = ax.plot(np.array(common_words))
+        line1 = ax.plot(np.array(words))
 
-        fig, ax = plt.subplots()
-        ax.plot(t, words, 'b')
-        ax.plot(t, common_words, 'k')
         ax.set(xlabel='Documents', ylabel='Number of words',
                title='Common words in documents, sorted by number of common words')
         ax.grid()

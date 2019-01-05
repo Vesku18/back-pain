@@ -754,7 +754,7 @@ def compare_documents_with_technical_voc():
 		common_words.append(str(len(common_list)))
 
 	f.close()
-"""
+
 	lista = []
 	for s in words:
 		lista.append([s, common_words[words.index(s)]])
@@ -769,28 +769,22 @@ def compare_documents_with_technical_voc():
 	import matplotlib.pyplot as plt
 	import numpy as np
 
-	print(words)
-	print(common_words)
-
+"""
 	# Data for plotting
-#	t = np.arange(0,len(words),1)
-	t= np.arange(len(words))
-	s = words
+	for i in common_words:
+		common_words[common_words.index(i)] = int(i)
+	for i in words:
+		words[words.index(i)] = int(i)
+	fig=  plt.figure()
+	ax = plt.subplot(111)
+	line2 = ax.plot( np.array(common_words))
+	line1 = ax.plot( np.array(words))
 
-	plt.figure()
-	fig, ax = plt.subplots()
-	ax.plot(t, words, 'b' , t, common_words, 'k')
+	ax.set(xlabel='Documents', ylabel='Number of words',
+		title='Common words in documents, sorted by number of common words')
+	ax.grid()
 
-
-
-#	line2 = plt.plot(np.array(common_words))
-#	line1 = plt.plot(np.array(words))
-
-	#	ax.set(xlabel='Documents', ylabel='Number of words',
-#		   title='Common words in documents, sorted by number of common words')
-#	ax.grid()
-
-#	fig.savefig("test.png")
+	fig.savefig("test.png")
 	plt.show()
 """
 
