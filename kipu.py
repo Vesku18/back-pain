@@ -33,7 +33,7 @@ def load_data():
     """
     Load and process data
     """
-#    nlpprojekti.lemmatize_files()
+    nlpprojekti.lemmatize_files()
     nlpprojekti.create_vocabulary()
     nlpprojekti.create_histograms()
     nlpprojekti.create_sentiment_analysis()
@@ -269,11 +269,11 @@ def document_overlapping(): # TÄSTÄ löhtee
             words[words.index(i)] = int(i)
         fig = plt.figure()
         ax = plt.subplot(111)
-        line2 = ax.plot(np.array(common_words))
-        line1 = ax.plot(np.array(words))
+        line2 = ax.plot(np.array(common_words), label = "Number of common words")
+        line1 = ax.plot(np.array(words), label="Number of words in doucument")
 
         ax.set(xlabel='Documents', ylabel='Number of words',
-               title='Common words in documents, sorted by number of common words')
+               title='Commonality with other documents. Sorted by number of common words')
         ax.grid()
 
         fig.savefig("test.png")
