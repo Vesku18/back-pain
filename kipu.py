@@ -23,7 +23,7 @@ import xlrd
 
 tila = {
     "laatikko": None,
-    "prosessoitu": False,
+    "prosessoitu": True,
 }
 
 def toisesta(r):
@@ -407,8 +407,8 @@ def main():
     ikkunasto.luo_nappi(nappikehys, "for Document solutions", sentiment_pie_solutions)
     ikkunasto.luo_nappi(nappikehys, "for Document users", sentiment_pie_users)
     ikkunasto.luo_tekstirivi(nappikehys, "Term-document matrix")
-    ikkunasto.luo_nappi(nappikehys, "TDM solutions", tdm_solutions)
-    ikkunasto.luo_nappi(nappikehys, "TDM users", tdm_users)
+    ikkunasto.luo_nappi(nappikehys, "Term-to-document-matrix: solutions", tdm_solutions)
+    ikkunasto.luo_nappi(nappikehys, "Term-to-document-matrix: users", tdm_users)
     ikkunasto.luo_tekstirivi(nappikehys, "Statistics")
     ikkunasto.luo_nappi(nappikehys, "Correlations", correlation)
     ikkunasto.luo_nappi(nappikehys, "Pain", pain_data)
