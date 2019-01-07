@@ -23,7 +23,7 @@ import xlrd
 
 tila = {
     "laatikko": None,
-    "prosessoitu": True,
+    "prosessoitu": False,
 }
 
 def toisesta(r):
@@ -33,14 +33,18 @@ def load_data():
     """
     Load and process data
     """
-    nlpprojekti.lemmatize_files()
-    nlpprojekti.create_vocabulary()
-    nlpprojekti.create_histograms()
-    nlpprojekti.create_sentiment_analysis()
-    nlpprojekti.compare_documents_with_technical_voc()
-    viesti = "\nData processing done."
-    ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
-    tila["prosessoitu"] = True
+    ret = nlpprojekti.lemmatize_files()
+    if ret == False:
+        viesti = "\nLEMMATIZATION FAILED!\nlas-fi, users.csv or\nsolutions.csv is missing!\nCANNOT CONTINUE!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
+    else:
+        nlpprojekti.create_vocabulary()
+        nlpprojekti.create_histograms()
+        nlpprojekti.create_sentiment_analysis()
+        nlpprojekti.compare_documents_with_technical_voc()
+        viesti = "\nData processing done."
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
+        tila["prosessoitu"] = True
 
 def term_counts():
     """ 
