@@ -64,16 +64,23 @@ def lemmatize_files():
     """
     os.system("if not exist users.csv echo SERIOUS ERROR! File users.csv not found!")
     os.system("if not exist solutions.csv echo SERIOUS ERROR! File solutions.csv not found!")
-    #tähän vielä loput csv:t
+    os.system("if not exist las-fi echo SERIOUS ERROR! File las-fi not found!")
     print("Starting lemmatization. This can take a while, please wait.")
     os.system("if exist users_lemmatized.csv del users_lemmatized.csv")
-    os.system("java -jar las-fi lemmatize users.csv --locale fi")
+    r = os.system("java -jar las-fi lemmatize users.csv --locale fi")
+    #print(r)
+    if r != 0:
+        return False
     os.system("ren users.csv.lemmatized users_lemmatized.csv")
     os.system("if exist solutions_lemmatized.csv del solutions_lemmatized.csv")
-    os.system("java -jar las-fi lemmatize solutions.csv --locale fi")
+    r = os.system("java -jar las-fi lemmatize solutions.csv --locale fi")
+    #print(r)
+    if r != 0:
+        return False
     os.system("ren solutions.csv.lemmatized solutions_lemmatized.csv") 
     print("Lemmatization ready.") 
     print("Lemmatized files are users_lemmatized.csv and solutions_lemmatized.csv")
+    return True
 
 def create_vocabulary():
 	##################################
@@ -186,12 +193,12 @@ def create_vocabulary():
 				prt=str1.split()
 				for s in prt:
 					if s not in stopwords:
-						if s not in vocabulary:
-								vocabulary.append(str(s))
-								string_count.append(1)
-						else:
-								ind = vocabulary.index(s)
-								string_count[ind] = int(string_count[ind]) + 1
+#						if s not in vocabulary:
+#								vocabulary.append(str(s))
+#								string_count.append(1)
+#						else:
+#								ind = vocabulary.index(s)
+#								string_count[ind] = int(string_count[ind]) + 1
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
@@ -204,12 +211,12 @@ def create_vocabulary():
 				prt=str1.split()
 				for s in prt:
 					if s not in stopwords:
-						if s not in vocabulary:
-								vocabulary.append(str(s))
-								string_count.append(1)
-						else:
-								ind = vocabulary.index(s)
-								string_count[ind] = int(string_count[ind]) + 1
+#						if s not in vocabulary:
+#								vocabulary.append(str(s))
+#								string_count.append(1)
+#						else:
+#								ind = vocabulary.index(s)
+#								string_count[ind] = int(string_count[ind]) + 1
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
@@ -222,12 +229,12 @@ def create_vocabulary():
 				prt=str(str2).split()
 				for s in prt:
 					if s not in stopwords:
-						if s not in vocabulary:
-								vocabulary.append(str(s))
-								string_count.append(1)
-						else:
-								ind = vocabulary.index(s)
-								string_count[ind] = int(string_count[ind]) + 1
+#						if s not in vocabulary:
+#								vocabulary.append(str(s))
+#								string_count.append(1)
+#						else:
+#								ind = vocabulary.index(s)
+#								string_count[ind] = int(string_count[ind]) + 1
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
@@ -240,12 +247,12 @@ def create_vocabulary():
 				prt=str(str2).split()
 				for s in prt:
 					if s not in stopwords:
-						if s not in vocabulary:
-								vocabulary.append(str(s))
-								string_count.append(1)
-						else:
-								ind = vocabulary.index(s)
-								string_count[ind] = int(string_count[ind]) + 1
+#						if s not in vocabulary:
+#								vocabulary.append(str(s))
+#								#string_count.append(1)
+#						else:
+#								ind = vocabulary.index(s)
+#								string_count[ind] = int(string_count[ind]) + 1
 						if s not in technical_vocabulary:
 								technical_vocabulary.append(str(s))
 					else:
