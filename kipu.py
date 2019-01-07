@@ -38,7 +38,7 @@ def load_data():
     nlpprojekti.create_histograms()
     nlpprojekti.create_sentiment_analysis()
     nlpprojekti.compare_documents_with_technical_voc()
-    viesti = "Data processing done."
+    viesti = "\nData processing done."
     ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti) 
     tila["prosessoitu"] = True
 
@@ -185,7 +185,7 @@ def sentiment_pie_solutions():
         with open("output_sentiment_of_solutions.csv") as csvfile:
             reader = csv.DictReader(csvfile, ['Sentiment', 'Count'])
             print()
-            print(' Plotting solutions.csv sentiment: ')
+            print('Plotting solutions.csv sentiment:')
             for row in reader:
                 print('   ', row['Sentiment'], 'sentiment documents count', row['Count'])
                 if row['Sentiment'] == 'Positive':
@@ -369,9 +369,27 @@ def quit_program():
     close_plots()
     ikkunasto.lopeta()
  
-def tee_jotain():
-    """ poistetaan kunhan kaikki käsittelijäfunktiot on valmiita"""
-    pass
+def tdm_solutions():
+    """
+    open term-document-matrix, solutions.csv
+    """
+    if tila["prosessoitu"] == True:    
+#        os.system('start excel /t output_intersection_with_reference.csv')
+        os.startfile('output_intersection_with_reference.csv')
+    else:
+        viesti = "Process data first!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)    
+
+def tdm_users():
+    """
+    open term-document-matrix, users.csv
+    """
+    if tila["prosessoitu"] == True:    
+#        os.system('start excel /t output_intersection_with_reference_for_users_doc.csv')
+        os.startfile('output_intersection_with_reference_for_users_doc.csv')
+    else:
+        viesti = "Process data first!"
+        ikkunasto.kirjoita_tekstilaatikkoon(tila["laatikko"], viesti)    
 
 def main():
     """
@@ -387,10 +405,10 @@ def main():
     ikkunasto.luo_nappi(nappikehys, "Technical term counts", tech_term_counts)
     ikkunasto.luo_tekstirivi(nappikehys, "Sentiment analysis")
     ikkunasto.luo_nappi(nappikehys, "for Document solutions", sentiment_pie_solutions)
-    ikkunasto.luo_nappi(nappikehys, "for Documnet users", sentiment_pie_users)
+    ikkunasto.luo_nappi(nappikehys, "for Document users", sentiment_pie_users)
     ikkunasto.luo_tekstirivi(nappikehys, "Term-document matrix")
-    ikkunasto.luo_nappi(nappikehys, "TDM1", tee_jotain)
-    ikkunasto.luo_nappi(nappikehys, "TDM2", tee_jotain)
+    ikkunasto.luo_nappi(nappikehys, "TDM solutions", tdm_solutions)
+    ikkunasto.luo_nappi(nappikehys, "TDM users", tdm_users)
     ikkunasto.luo_tekstirivi(nappikehys, "Statistics")
     ikkunasto.luo_nappi(nappikehys, "Correlations", correlation)
     ikkunasto.luo_nappi(nappikehys, "Pain", pain_data)
