@@ -33,6 +33,7 @@ def load_data():
     """
     Load and process data
     """
+    os.remove('output_dictionary.txt')
     ret = nlpprojekti.lemmatize_files()
     if ret == False:
         viesti = "\nLEMMATIZATION FAILED!\nlas-fi, users.csv or\nsolutions.csv is missing!\nCANNOT CONTINUE!"
@@ -121,6 +122,7 @@ def term_counts():
                     tapa_histo[sana] = sanasto[sana]
         print("\nTop life styles:")
         print(tapa_histo)
+        print("")
         top_tavat = dict(sorted(tapa_histo.items(), key=operator.itemgetter(1),reverse=True) [:10])
 
         # histogram: all terms
